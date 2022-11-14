@@ -38,7 +38,7 @@ class AppButton extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               color: color.withOpacity(0.3),
-              spreadRadius: 2,
+              spreadRadius: 5,
               blurRadius: 75,
               offset: const Offset(0, 3), // changes position of shadow
             ),

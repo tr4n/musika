@@ -15,14 +15,14 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen> {
   _onTapStart() {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+        context, MaterialPageRoute(builder: (context) => const MainScreen()));
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
         padding: EdgeInsets.only(top: context.safeTopPadding),
-        color: AppColor.blue41C3D6,
+        color: AppColor.whiteD9D9D9,
         child: _welcomeBody());
   }
 
@@ -30,26 +30,34 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return Stack(
       children: [
         const SizedBox(width: double.infinity, height: double.infinity),
+        Positioned(top: 146, left: 50, child: _circle(50)),
+        Positioned(top: 46, right: 72, child: _circle(40)),
+        Positioned(top: 46, left: 64, child: _circle(40)),
+        Positioned(top: 23, left: 100, child: _circle(10)),
+        Positioned(top: 32, left: 250, child: _circle(23)),
+        Positioned(top: 250, left: 43, child: _circle(30)),
+        Positioned(top: 210, right: 25, child: _circle(25)),
+        Positioned(top: 180, right: 24, child: _circle(5)),
         Positioned(
-          top: 124,
-          child: Image.asset("assets/images/img_girl.png",
-              width: context.getWidth(), height: 407),
+          top: 120,
+          child: Container(
+            width: context.getWidth(),
+            alignment: Alignment.center,
+            child: _circle(225),
+          ),
         ),
+
         Positioned(
-          child: Image.asset("assets/images/img_ellipse.png",
-              width: 150, height: 150),
-        ),
-        Positioned(
-          top: 46,
-          right: 50,
-          child: Image.asset("assets/images/img_ellipse.png",
-              width: 78, height: 78),
-        ),
-        Positioned(
-          top: 194,
-          right: 25,
-          child: Image.asset("assets/images/img_ellipse.png",
-              width: 100, height: 100),
+          top: 50,
+          child: Container(
+            width: context.getWidth(),
+            alignment: Alignment.center,
+            child: Image.asset(
+              "assets/images/img_girl_2.png",
+              width: context.getWidth() * 0.8,
+              fit: BoxFit.contain,
+            ),
+          ),
         ),
         Positioned(
           bottom: 0,
@@ -64,7 +72,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       width: context.getWidth(),
       padding: const EdgeInsets.symmetric(horizontal: 32),
       decoration: const BoxDecoration(
-        color: Colors.black,
+        color: Colors.white,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(54),
           topRight: Radius.circular(54),
@@ -76,24 +84,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           RichText(
             textAlign: TextAlign.center,
             text: TextSpan(
-              text: "From the ",
+              text: "Listen to the best music every day with ",
               style: const TextStyle(
-                color: Colors.white,
+                color: Colors.black,
                 fontWeight: FontWeight.bold,
-                fontSize: 24,
+                fontSize: Sizes.size28,
               ),
               children: [
                 TextSpan(
-                    text: "latest",
-                    style: TextStyle(color: AppColor.blue41C3D6)),
-                const TextSpan(text: " to the "),
-                TextSpan(
-                    text: "greatest",
-                    style: TextStyle(color: AppColor.blue41C3D6)),
-                const TextSpan(text: " hits, play your favorite tracks on "),
-                TextSpan(
-                    text: "musium",
-                    style: TextStyle(color: AppColor.blue41C3D6)),
+                    text: "Musika",
+                    style: TextStyle(color: AppColor.green06C149)),
                 const TextSpan(text: " now!"),
               ],
             ),
@@ -114,7 +114,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           ),
           const SizedBox(height: 24),
           AppButton(
-            color: AppColor.blue41C3D6,
+            color: AppColor.green06C149,
             text: "Get Started",
             width: context.getWidth() * 0.8,
             onTap: _onTapStart,
@@ -122,6 +122,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           SizedBox(height: context.safeBottomPadding + 24),
         ],
       ),
+    );
+  }
+
+  Widget _circle(double size) {
+    return Container(
+      width: size,
+      height: size,
+      decoration:
+          BoxDecoration(color: AppColor.green06C149, shape: BoxShape.circle),
     );
   }
 }

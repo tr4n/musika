@@ -3,10 +3,10 @@ import 'package:flutter_lorem/flutter_lorem.dart';
 
 import '../../resources/resources.dart';
 
-class ItemTrending extends StatelessWidget {
+class ItemArtist extends StatelessWidget {
   String title;
 
-  ItemTrending({this.title = "", super.key});
+  ItemArtist({this.title = "", super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +18,9 @@ class ItemTrending extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(Sizes.size28),
+            borderRadius: BorderRadius.circular(Sizes.size100),
             child: Image.network(
-              "https://api.lorem.space/image/album?w=150&h=150",
+              "https://api.lorem.space/image/face?w=150&h=150",
               width: Sizes.size150,
               height: Sizes.size150,
             ),
