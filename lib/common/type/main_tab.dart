@@ -1,5 +1,5 @@
 enum MainTab {
-  home(0, "Home", "assets/icons/ic_library_outlined.png", "assets/icons/ic_library_filled.png"),
+  home(0, "Home", "assets/icons/ic_home_outlined.png", "assets/icons/ic_home_filled.png"),
   explore(1, "Explore", "assets/icons/ic_explore_outlined.png",  "assets/icons/ic_explore_filled.png"),
   library(2, "Library", "assets/icons/ic_library_outlined.png",  "assets/icons/ic_library_filled.png");
 

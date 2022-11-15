@@ -4,12 +4,12 @@ import 'package:dio/dio.dart';
 
 import '../response/error_response.dart';
 
-class MovieApi {
+class ZingMp3Api {
   final int _timeOut = 10000; //10s
   late Dio _dio;
   static const _apiKey = "d61ca0998c8a152c6556e310a4a8e4db";
 
-  MovieApi() {
+  ZingMp3Api() {
     BaseOptions options =
         BaseOptions(connectTimeout: _timeOut, receiveTimeout: _timeOut);
     Map<String, dynamic> headers = {};
@@ -19,8 +19,7 @@ class MovieApi {
    */
     options.headers = headers;
     _dio = Dio(options)
-      ..interceptors.add(LogInterceptor(responseBody: true, requestBody: true))
-      ..options.queryParameters.addAll({"api_key": _apiKey});
+      ..interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
   }
 
   Future<Response?> get(
@@ -53,6 +52,13 @@ class MovieApi {
       throw _handelError(e, url);
     }
   }
+
+  Future<MoviesResponse> getLatestMovies([int page = 1]) async {
+    final response =
+    await _dio.get(Urls.moviesLatestPath, queryParameters: {"page": page});
+    return MoviesResponse.fromJson(response.data);
+  }
+
 
   Response _handelError(dynamic error, String url) {
     try {
