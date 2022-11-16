@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:musium/data/platform/network/api/urls.dart';
+import 'package:musium/data/platform/network/response/home_response.dart';
 
 import '../response/error_response.dart';
 
@@ -53,12 +55,10 @@ class ZingMp3Api {
     }
   }
 
-  Future<MoviesResponse> getLatestMovies([int page = 1]) async {
-    final response =
-    await _dio.get(Urls.moviesLatestPath, queryParameters: {"page": page});
-    return MoviesResponse.fromJson(response.data);
+  Future<HomeResponse> getHomeData() async {
+    final response = await _dio.get(Urls.home);
+    return HomeResponse.fromJson(response.data);
   }
-
 
   Response _handelError(dynamic error, String url) {
     try {

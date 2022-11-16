@@ -1,4 +1,4 @@
-class ArtistItemResponse {
+class Artist {
   String? id;
   String? name;
   bool? spotlight;
@@ -10,7 +10,7 @@ class ArtistItemResponse {
   String? playlistId;
   int? totalFollow;
 
-  ArtistItemResponse(
+  Artist(
       {this.id,
       this.name,
       this.spotlight,
@@ -22,7 +22,7 @@ class ArtistItemResponse {
       this.playlistId,
       this.totalFollow});
 
-  ArtistItemResponse.fromJson(Map<String, dynamic> json) {
+  Artist.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     spotlight = json['spotlight'];

@@ -1,5 +1,7 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:musium/blocs/home_bloc.dart';
 import 'package:musium/common/type/main_tab.dart';
 import 'package:musium/extension/context_ext.dart';
 import 'package:musium/ui/components/components.dart';
@@ -19,21 +21,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _counter = 0;
+  final _homeBloc = HomeBloc();
+
   final _screens = [
     ScreenTab(MainTab.home, const HomeScreen()),
     ScreenTab(MainTab.explore, const ExploreScreen()),
     ScreenTab(MainTab.library, const LibraryScreen())
   ];
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    _homeBloc.getHomeData();
     return Container(color: Colors.white, child: _homeBody());
   }
 
@@ -46,6 +44,8 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           SizedBox(height: context.safeTopPadding + Sizes.size16),
           _actionBar(),
+          const SizedBox(height: Sizes.size32),
+          _banners(),
           const SizedBox(height: Sizes.size32),
           _trendingNow(),
           const SizedBox(height: Sizes.size32),
@@ -116,6 +116,38 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _banners() {
+    return StreamBuilder(
+      stream: _homeBloc.bannerObservable,
+      builder: (context, snapshot) {
+        return CarouselSlider(
+          options: CarouselOptions(),
+          items: snapshot.data?.map((banner) {
+                return Builder(
+                  builder: (BuildContext context) {
+                    return Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin:
+                          const EdgeInsets.symmetric(horizontal: Sizes.size8),
+                      child: banner.cover != null
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(Sizes.size8),
+                              child: Image.network(
+                                banner.banner ?? "",
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : null,
+                    );
+                  },
+                );
+              }).toList() ??
+              List.empty(),
+        );
+      },
+    );
+  }
+
   Widget _trendingNow() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: Sizes.size16),
@@ -147,7 +179,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
-
           const SizedBox(height: Sizes.size24),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -157,63 +188,60 @@ class _HomeScreenState extends State<HomeScreen> {
                   .toList(),
             ),
           ),
-          // GridView.count(
-          //   shrinkWrap: true,
-          //   crossAxisCount: 2,
-          //   mainAxisSpacing: Sizes.size8,
-          //   crossAxisSpacing: Sizes.size12,
-          //   scrollDirection: Axis.vertical,
-          //   childAspectRatio: 180 / 50,
-          //   children: [0, 1, 2, 3, 4, 5].map((e) => ItemTrending()).toList(),
-          // ),
         ],
       ),
     );
   }
 
   Widget _popularArtists() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: Sizes.size16),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return StreamBuilder(
+      stream: _homeBloc.artistsObservable,
+      builder: (context, snapshot) {
+        final artists = snapshot.data;
+        if (artists == null) {
+          return const SizedBox();
+        }
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: Sizes.size16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const DefaultTextStyle(
-                style: TextStyle(
-                  fontSize: Sizes.size20,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black,
-                ),
-                child: Text("Popular Artists", textAlign: TextAlign.start),
-              ),
-              Container(
-                margin: const EdgeInsets.only(right: Sizes.size16),
-                child: DefaultTextStyle(
-                  style: TextStyle(
-                    fontSize: Sizes.size16,
-                    fontWeight: FontWeight.w700,
-                    color: AppColor.green06C149,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const DefaultTextStyle(
+                    style: TextStyle(
+                      fontSize: Sizes.size20,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black,
+                    ),
+                    child: Text("Popular Artists", textAlign: TextAlign.start),
                   ),
-                  child: const Text("See All", textAlign: TextAlign.start),
+                  Container(
+                    margin: const EdgeInsets.only(right: Sizes.size16),
+                    child: DefaultTextStyle(
+                      style: TextStyle(
+                        fontSize: Sizes.size16,
+                        fontWeight: FontWeight.w700,
+                        color: AppColor.green06C149,
+                      ),
+                      child: const Text("See All", textAlign: TextAlign.start),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: Sizes.size24),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: artists.map((e) => ItemArtist(artist: e)).toList(),
                 ),
               ),
             ],
           ),
-
-          const SizedBox(height: Sizes.size24),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [0, 1, 2, 3, 4, 5]
-                  .map((e) => ItemArtist(title: e.toString()))
-                  .toList(),
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 

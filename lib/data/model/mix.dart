@@ -1,16 +1,17 @@
-import 'responses.dart';
+import 'models.dart';
 
-class PlayListItemResponse {
+class Mix {
   String? encodeId;
   String? title;
   String? thumbnail;
-  bool? isoffical;
+  bool? isOfficial;
+  String? link;
   bool? isIndie;
   String? releaseDate;
   String? sortDescription;
   List<String>? genreIds;
   bool? pR;
-  List<ArtistItemResponse>? artists;
+  List<Artist>? artists;
   String? artistsNames;
   int? playItemMode;
   int? subType;
@@ -23,11 +24,12 @@ class PlayListItemResponse {
   String? textType;
   bool? isSingle;
 
-  PlayListItemResponse(
+  Mix(
       {this.encodeId,
       this.title,
       this.thumbnail,
-      this.isoffical,
+      this.isOfficial,
+      this.link,
       this.isIndie,
       this.releaseDate,
       this.sortDescription,
@@ -46,20 +48,21 @@ class PlayListItemResponse {
       this.textType,
       this.isSingle});
 
-  PlayListItemResponse.fromJson(Map<String, dynamic> json) {
+  Mix.fromJson(Map<String, dynamic> json) {
     encodeId = json['encodeId'];
     title = json['title'];
     thumbnail = json['thumbnail'];
-    isoffical = json['isoffical'];
+    isOfficial = json['isoffical'];
+    link = json['link'];
     isIndie = json['isIndie'];
     releaseDate = json['releaseDate'];
     sortDescription = json['sortDescription'];
     genreIds = json['genreIds'].cast<String>();
     pR = json['PR'];
     if (json['artists'] != null) {
-      artists = <ArtistItemResponse>[];
+      artists = <Artist>[];
       json['artists'].forEach((v) {
-        artists?.add(ArtistItemResponse.fromJson(v));
+        artists?.add(Artist.fromJson(v));
       });
     }
     artistsNames = json['artistsNames'];
@@ -80,14 +83,15 @@ class PlayListItemResponse {
     data['encodeId'] = encodeId;
     data['title'] = title;
     data['thumbnail'] = thumbnail;
-    data['isoffical'] = isoffical;
+    data['isoffical'] = isOfficial;
+    data['link'] = link;
     data['isIndie'] = isIndie;
     data['releaseDate'] = releaseDate;
     data['sortDescription'] = sortDescription;
     data['genreIds'] = genreIds;
     data['PR'] = pR;
     if (artists != null) {
-      data['artists'] = artists?.map((v) => v.toJson()).toList();
+      data['artists'] = artists!.map((v) => v.toJson()).toList();
     }
     data['artistsNames'] = artistsNames;
     data['playItemMode'] = playItemMode;
