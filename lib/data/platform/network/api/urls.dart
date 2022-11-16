@@ -1,7 +1,7 @@
 class Urls {
 
-  static const _baseUrl = 'https://api.themoviedb.org/3';
-  static const movieUrl = '$_baseUrl/movie';
+  static const _baseUrl = "https://server-tau-six.vercel.app/api";
+  static const home = '$_baseUrl/home';
   static const searchMovieUrl = '$_baseUrl/search/movie';
 
   // Image

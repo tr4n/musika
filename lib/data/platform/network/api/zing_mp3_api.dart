@@ -1,15 +1,17 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:musium/data/platform/network/api/urls.dart';
+import 'package:musium/data/platform/network/response/home_response.dart';
 
 import '../response/error_response.dart';
 
-class MovieApi {
+class ZingMp3Api {
   final int _timeOut = 10000; //10s
   late Dio _dio;
   static const _apiKey = "d61ca0998c8a152c6556e310a4a8e4db";
 
-  MovieApi() {
+  ZingMp3Api() {
     BaseOptions options =
         BaseOptions(connectTimeout: _timeOut, receiveTimeout: _timeOut);
     Map<String, dynamic> headers = {};
@@ -19,8 +21,7 @@ class MovieApi {
    */
     options.headers = headers;
     _dio = Dio(options)
-      ..interceptors.add(LogInterceptor(responseBody: true, requestBody: true))
-      ..options.queryParameters.addAll({"api_key": _apiKey});
+      ..interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
   }
 
   Future<Response?> get(
@@ -52,6 +53,11 @@ class MovieApi {
       print("DioError: ${e.toString()}");
       throw _handelError(e, url);
     }
+  }
+
+  Future<HomeResponse> getHomeData() async {
+    final response = await _dio.get(Urls.home);
+    return HomeResponse.fromJson(response.data);
   }
 
   Response _handelError(dynamic error, String url) {

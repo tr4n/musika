@@ -27,42 +27,44 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   Widget _welcomeBody() {
-    return Stack(
+    return Column(
       children: [
-        const SizedBox(width: double.infinity, height: double.infinity),
-        Positioned(top: 146, left: 50, child: _circle(50)),
-        Positioned(top: 46, right: 72, child: _circle(40)),
-        Positioned(top: 46, left: 64, child: _circle(40)),
-        Positioned(top: 23, left: 100, child: _circle(10)),
-        Positioned(top: 32, left: 250, child: _circle(23)),
-        Positioned(top: 250, left: 43, child: _circle(30)),
-        Positioned(top: 210, right: 25, child: _circle(25)),
-        Positioned(top: 180, right: 24, child: _circle(5)),
-        Positioned(
-          top: 120,
-          child: Container(
-            width: context.getWidth(),
-            alignment: Alignment.center,
-            child: _circle(225),
+        Expanded(
+          child: Stack(
+            children: [
+              const SizedBox(width: double.infinity, height: double.infinity),
+              Positioned(top: 146, left: 50, child: _circle(50)),
+              Positioned(top: 46, right: 72, child: _circle(40)),
+              Positioned(top: 46, left: 64, child: _circle(40)),
+              Positioned(top: 23, left: 100, child: _circle(10)),
+              Positioned(top: 32, left: 250, child: _circle(23)),
+              Positioned(top: 250, left: 43, child: _circle(30)),
+              Positioned(top: 210, right: 25, child: _circle(25)),
+              Positioned(top: 180, right: 24, child: _circle(5)),
+              Positioned(
+                bottom: 85,
+                child: Container(
+                  width: context.getWidth(),
+                  alignment: Alignment.center,
+                  child: _circle(225),
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                child: Container(
+                  width: context.getWidth(),
+                  alignment: Alignment.center,
+                  child: Image.asset(
+                    "assets/images/img_girl_2.png",
+                    width: context.getWidth() * 0.8,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-
-        Positioned(
-          top: 50,
-          child: Container(
-            width: context.getWidth(),
-            alignment: Alignment.center,
-            child: Image.asset(
-              "assets/images/img_girl_2.png",
-              width: context.getWidth() * 0.8,
-              fit: BoxFit.contain,
-            ),
-          ),
-        ),
-        Positioned(
-          bottom: 0,
-          child: _bottomIntroduction(),
-        ),
+        _bottomIntroduction()
       ],
     );
   }
@@ -99,17 +101,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ),
           ),
           const SizedBox(height: 40),
-          Stack(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(width: 90, height: 12),
-              Positioned(
-                  left: 0,
-                  child:
-                      Image.asset("assets/images/slider_blue.png", height: 15)),
-              Positioned(
-                  right: 0,
-                  child:
-                      Image.asset("assets/images/slider_white.png", height: 15))
+              _circle(8),
+              const SizedBox(width: 8),
+              _circle(8),
+              const SizedBox(width: 8),
+              _circle(8),
             ],
           ),
           const SizedBox(height: 24),
