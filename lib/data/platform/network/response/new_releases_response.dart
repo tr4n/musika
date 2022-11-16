@@ -22,16 +22,20 @@ class NewReleasesResponse extends HomeItemDataResponse {
   }
 }
 
-class NewReleasesData extends HomeItemDataResponse {
+class NewReleasesData {
   NewReleasesData({
     this.vPop,
     this.others,
   });
 
+  List<NewRelease>? all;
   List<NewRelease>? vPop;
   List<NewRelease>? others;
 
   NewReleasesData.fromJson(Map<String, dynamic> json) {
+    all = cast<List<dynamic>>(json["all"])
+        ?.map((e) => NewRelease.fromJson(e))
+        .toList();
     vPop = cast<List<dynamic>>(json["vPop"])
         ?.map((e) => NewRelease.fromJson(e))
         .toList();
@@ -42,6 +46,7 @@ class NewReleasesData extends HomeItemDataResponse {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data["all"] = vPop?.map((e) => e.toJson()).toList();
     data["vPop"] = vPop?.map((e) => e.toJson()).toList();
     data["others"] = others?.map((e) => e.toJson()).toList();
     return data;
