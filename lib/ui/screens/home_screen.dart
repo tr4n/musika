@@ -1,12 +1,14 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:musium/blocs/home_bloc.dart';
+import 'package:musium/data/model/models.dart';
 import 'package:musium/extension/context_ext.dart';
 import 'package:musium/ui/components/components.dart';
-import 'package:musium/ui/components/item_artist.dart';
+import 'package:musium/ui/components/item_artist_spotlights.dart';
+import 'package:musium/ui/components/item_banners.dart';
 import 'package:musium/ui/components/item_mixes.dart';
-import 'package:musium/ui/components/item_new_release.dart';
+import 'package:musium/ui/components/item_new_releases.dart';
 import 'package:musium/ui/components/item_playlists.dart';
+import 'package:musium/ui/screens/playlist_screen.dart';
 
 import '../../resources/resources.dart';
 
@@ -19,6 +21,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _homeBloc = HomeBloc();
+
+  _onPlaylistTap(Playlist playlist) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => PlaylistScreen(playlist)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,33 +120,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _banners() {
     return StreamBuilder(
-      stream: _homeBloc.bannerObservable,
+      stream: _homeBloc.bannersObservable,
       builder: (context, snapshot) {
         final banners = snapshot.data;
         if (banners == null || banners.isEmpty) {
           return const Center(child: CircularProgressIndicator());
         }
-        return CarouselSlider(
-          options: CarouselOptions(),
-          items: banners.map((banner) {
-            return Builder(
-              builder: (BuildContext context) {
-                return Container(
-                  width: MediaQuery.of(context).size.width,
-                  margin: const EdgeInsets.symmetric(horizontal: Sizes.size8),
-                  child: banner.cover != null
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(Sizes.size8),
-                          child: Image.network(
-                            banner.banner ?? "",
-                            fit: BoxFit.cover,
-                          ),
-                        )
-                      : null,
-                );
-              },
-            );
-          }).toList(),
+        return Column(
+          children: banners.map((e) => ItemBanners(e)).toList(),
         );
       },
     );
@@ -151,45 +141,8 @@ class _HomeScreenState extends State<HomeScreen> {
         if (newReleases == null) {
           return const SizedBox();
         }
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: Sizes.size16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const DefaultTextStyle(
-                    style: TextStyle(
-                      fontSize: Sizes.size20,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
-                    ),
-                    child: Text("New Releases", textAlign: TextAlign.start),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(right: Sizes.size8),
-                    child: DefaultTextStyle(
-                      style: TextStyle(
-                        fontSize: Sizes.size16,
-                        fontWeight: FontWeight.w700,
-                        color: AppColor.green06C149,
-                      ),
-                      child: const Text("See All", textAlign: TextAlign.start),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: Sizes.size24),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: newReleases.map((e) => ItemNewRelease(e)).toList(),
-                ),
-              ),
-            ],
-          ),
+        return Column(
+          children: newReleases.map((e) => ItemNewReleases(e)).toList(),
         );
       },
     );
@@ -204,7 +157,12 @@ class _HomeScreenState extends State<HomeScreen> {
           return const SizedBox();
         }
         return Column(
-          children: playlistsList.map((e) => ItemPlaylists(e)).toList(),
+          children: playlistsList
+              .map((playlists) => ItemPlaylists(
+                    playlists: playlists,
+                    onPlaylistTap: _onPlaylistTap,
+                  ))
+              .toList(),
         );
       },
     );
@@ -218,45 +176,8 @@ class _HomeScreenState extends State<HomeScreen> {
         if (artists == null) {
           return const SizedBox();
         }
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: Sizes.size16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const DefaultTextStyle(
-                    style: TextStyle(
-                      fontSize: Sizes.size20,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
-                    ),
-                    child: Text("Popular Artists", textAlign: TextAlign.start),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(right: Sizes.size8),
-                    child: DefaultTextStyle(
-                      style: TextStyle(
-                        fontSize: Sizes.size16,
-                        fontWeight: FontWeight.w700,
-                        color: AppColor.green06C149,
-                      ),
-                      child: const Text("See All", textAlign: TextAlign.start),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: Sizes.size24),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: artists.map((e) => ItemArtist(artist: e)).toList(),
-                ),
-              ),
-            ],
-          ),
+        return Column(
+          children: artists.map((e) => ItemArtistSpotlights(e)).toList(),
         );
       },
     );

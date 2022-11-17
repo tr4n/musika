@@ -44,7 +44,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               Positioned(
                 bottom: 85,
                 child: Container(
-                  width: context.getWidth(),
+                  width: context.screenWidth,
                   alignment: Alignment.center,
                   child: _circle(225),
                 ),
@@ -52,11 +52,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               Positioned(
                 bottom: 0,
                 child: Container(
-                  width: context.getWidth(),
+                  width: context.screenWidth,
                   alignment: Alignment.center,
                   child: Image.asset(
                     "assets/images/img_girl_2.png",
-                    width: context.getWidth() * 0.8,
+                    width: context.screenWidth * 0.8,
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -71,7 +71,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   Widget _bottomIntroduction() {
     return Container(
-      width: context.getWidth(),
+      width: context.screenWidth,
       padding: const EdgeInsets.symmetric(horizontal: 32),
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -115,7 +115,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           AppButton(
             color: AppColor.green06C149,
             text: "Get Started",
-            width: context.getWidth() * 0.8,
+            width: context.screenWidth * 0.8,
             onTap: _onTapStart,
           ),
           SizedBox(height: context.safeBottomPadding + 24),

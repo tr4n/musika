@@ -44,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
         AppButton(
           color: AppColor.blue41C3D6,
           text: "Login with Spotify",
-          width: context.getWidth() * 0.8,
+          width: context.screenWidth * 0.8,
           onTap: _onTapStart,
         ),
         SizedBox(height: context.safeBottomPadding + 24),
@@ -57,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
       opacity: 1.0,
       blendMode: BlendMode.screen,
       child: Image.asset("assets/images/logo_app_512.png",
-          width: context.getWidth() * 0.6, fit: BoxFit.cover),
+          width: context.screenWidth * 0.6, fit: BoxFit.cover),
     );
   }
 }

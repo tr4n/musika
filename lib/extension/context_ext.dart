@@ -11,12 +11,12 @@ extension ContextUtils on BuildContext {
 
   double get safeBottomPadding => MediaQuery.of(this).padding.bottom;
 
-  double getWidth() {
+  double get screenWidth {
     double width = MediaQuery.of(this).size.width;
     return width;
   }
 
-  double getHeight() {
+  double get screenHeight {
     double height = MediaQuery.of(this).size.height;
     return height;
   }

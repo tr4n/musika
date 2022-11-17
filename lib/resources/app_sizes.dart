@@ -28,4 +28,6 @@ class Sizes {
   static const double size100 = 100;
   static const double size150 = 150;
   static const double size184 = 184;
+  static const double size200 = 200;
+  static const double size250 = 250;
 }

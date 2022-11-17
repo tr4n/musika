@@ -7,58 +7,58 @@ import '../data/model/models.dart';
 class HomeBloc {
   final _zingRepository = locator<ZingRepository>();
 
-  final _bannersSubject = PublishSubject<List<MusicBanner>>();
-  final _artistsSubject = PublishSubject<List<Artist>>();
-  final _newReleasesSubject = PublishSubject<List<NewRelease>>();
+  final _bannersSubject = PublishSubject<List<Banners>>();
+  final _artistsSubject = PublishSubject<List<ArtistSpotlights>>();
+  final _newReleasesSubject = PublishSubject<List<NewReleases>>();
   final _playlistsSubject = PublishSubject<List<Playlists>>();
   final _mixesListSubject = PublishSubject<List<Mixes>>();
 
-  Stream<List<MusicBanner>> get bannerObservable => _bannersSubject.stream;
+  Stream<List<Banners>> get bannersObservable => _bannersSubject.stream;
 
-  Stream<List<Artist>> get artistsObservable => _artistsSubject.stream;
+  Stream<List<ArtistSpotlights>> get artistsObservable =>
+      _artistsSubject.stream;
 
   Stream<List<Playlists>> get playlistsObservable => _playlistsSubject.stream;
 
   Stream<List<Mixes>> get mixesObservable => _mixesListSubject.stream;
 
-  Stream<List<NewRelease>> get newReleasesObservable =>
+  Stream<List<NewReleases>> get newReleasesObservable =>
       _newReleasesSubject.stream;
 
   void getHomeData() async {
     final homeResponse = await _zingRepository.getHomeData();
-    final musicBanners = <MusicBanner>[];
-    final artists = <Artist>[];
+    final bannersList = <Banners>[];
+    final artistsList = <ArtistSpotlights>[];
     final mixesList = <Mixes>[];
-    final livestreams = <Livestream>[];
+    final livestreamsList = <Livestreams>[];
     final playlistsList = <Playlists>[];
-    final newReleases = <NewRelease>[];
+    final newReleasesList = <NewReleases>[];
 
     final items = homeResponse.data?.items ?? List.empty();
 
     for (var item in items) {
       if (item is Banners) {
-        musicBanners
-            .addAll(item.items?.whereType<MusicBanner>() ?? List.empty());
+        bannersList.add(item);
       }
       if (item is ArtistSpotlights) {
-        artists.addAll(item.items?.whereType<Artist>() ?? List.empty());
+        artistsList.add(item);
       }
       if (item is Playlists) {
         playlistsList.add(item);
       }
       if (item is Livestreams) {
-        livestreams.addAll(item.items?.whereType<Livestream>() ?? List.empty());
+        livestreamsList.add(item);
       }
       if (item is Mixes) {
         mixesList.add(item);
       }
       if (item is NewReleases) {
-        newReleases.addAll(item.items?.all ?? List.empty());
+        newReleasesList.add(item);
       }
     }
-    _bannersSubject.sink.add(musicBanners);
-    _artistsSubject.sink.add(artists);
-    _newReleasesSubject.sink.add(newReleases);
+    _bannersSubject.sink.add(bannersList);
+    _artistsSubject.sink.add(artistsList);
+    _newReleasesSubject.sink.add(newReleasesList);
     _playlistsSubject.sink.add(playlistsList);
     _mixesListSubject.sink.add(mixesList);
   }
