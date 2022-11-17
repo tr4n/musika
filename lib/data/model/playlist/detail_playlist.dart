@@ -1,10 +1,10 @@
-import 'models.dart';
+import '../models.dart';
 
-class Mix {
+class DetailPlaylist {
   String? encodeId;
   String? title;
   String? thumbnail;
-  bool? isOfficial;
+  bool? isoffical;
   String? link;
   bool? isIndie;
   String? releaseDate;
@@ -23,12 +23,22 @@ class Mix {
   bool? isAlbum;
   String? textType;
   bool? isSingle;
+  String? description;
+  String? aliasTitle;
+  String? sectionId;
+  int? contentLastUpdate;
+  Artist? artist;
+  List<Genre>? genres;
+  Songs? song;
+  int? like;
+  int? listen;
+  bool? liked;
 
-  Mix(
+  DetailPlaylist(
       {this.encodeId,
       this.title,
       this.thumbnail,
-      this.isOfficial,
+      this.isoffical,
       this.link,
       this.isIndie,
       this.releaseDate,
@@ -46,13 +56,23 @@ class Mix {
       this.userName,
       this.isAlbum,
       this.textType,
-      this.isSingle});
+      this.isSingle,
+      this.description,
+      this.aliasTitle,
+      this.sectionId,
+      this.contentLastUpdate,
+      this.artist,
+      this.genres,
+      this.song,
+      this.like,
+      this.listen,
+      this.liked});
 
-  Mix.fromJson(Map<String, dynamic> json) {
+  DetailPlaylist.fromJson(Map<String, dynamic> json) {
     encodeId = json['encodeId'];
     title = json['title'];
     thumbnail = json['thumbnail'];
-    isOfficial = json['isoffical'];
+    isoffical = json['isoffical'];
     link = json['link'];
     isIndie = json['isIndie'];
     releaseDate = json['releaseDate'];
@@ -62,7 +82,7 @@ class Mix {
     if (json['artists'] != null) {
       artists = <Artist>[];
       json['artists'].forEach((v) {
-        artists?.add(Artist.fromJson(v));
+        artists!.add(Artist.fromJson(v));
       });
     }
     artistsNames = json['artistsNames'];
@@ -76,6 +96,21 @@ class Mix {
     isAlbum = json['isAlbum'];
     textType = json['textType'];
     isSingle = json['isSingle'];
+    description = json['description'];
+    aliasTitle = json['aliasTitle'];
+    sectionId = json['sectionId'];
+    contentLastUpdate = json['contentLastUpdate'];
+    artist = json['artist'] != null ? Artist.fromJson(json['artist']) : null;
+    if (json['genres'] != null) {
+      genres = <Genre>[];
+      json['genres'].forEach((v) {
+        genres!.add(Genre.fromJson(v));
+      });
+    }
+    song = json['song'] != null ? Songs.fromJson(json['song']) : null;
+    like = json['like'];
+    listen = json['listen'];
+    liked = json['liked'];
   }
 
   Map<String, dynamic> toJson() {
@@ -83,16 +118,14 @@ class Mix {
     data['encodeId'] = encodeId;
     data['title'] = title;
     data['thumbnail'] = thumbnail;
-    data['isoffical'] = isOfficial;
+    data['isoffical'] = isoffical;
     data['link'] = link;
     data['isIndie'] = isIndie;
     data['releaseDate'] = releaseDate;
     data['sortDescription'] = sortDescription;
     data['genreIds'] = genreIds;
     data['PR'] = pR;
-    if (artists != null) {
-      data['artists'] = artists!.map((v) => v.toJson()).toList();
-    }
+    data['artists'] = artists?.map((v) => v.toJson()).toList();
     data['artistsNames'] = artistsNames;
     data['playItemMode'] = playItemMode;
     data['subType'] = subType;
@@ -104,6 +137,18 @@ class Mix {
     data['isAlbum'] = isAlbum;
     data['textType'] = textType;
     data['isSingle'] = isSingle;
+    data['description'] = description;
+    data['aliasTitle'] = aliasTitle;
+    data['sectionId'] = sectionId;
+    data['contentLastUpdate'] = contentLastUpdate;
+    data['artist'] = artist?.toJson();
+    data['genres'] = genres?.map((v) => v.toJson()).toList();
+    if (song != null) {
+      data['song'] = song!.toJson();
+    }
+    data['like'] = like;
+    data['listen'] = listen;
+    data['liked'] = liked;
     return data;
   }
 }

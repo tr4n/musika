@@ -1,14 +1,14 @@
-import 'package:musium/data/platform/network/response/home_item_data_response.dart';
+import 'package:musium/data/model/home_section_item.dart';
 
-import '../../../../extension/collection_ext.dart';
-import '../../../model/models.dart';
+import '../../../extension/collection_ext.dart';
+import '../models.dart';
 
-class NewReleasesResponse extends HomeItemDataResponse {
+class NewReleases extends HomeSectionItem {
   NewReleasesData? items;
 
-  NewReleasesResponse({this.items});
+  NewReleases({this.items});
 
-  NewReleasesResponse.fromJson(Map<String, dynamic> json) {
+  NewReleases.fromJson(Map<String, dynamic> json) {
     sectionType = json['sectionType'];
     title = json['title'];
     items = NewReleasesData.fromJson(json["items"]);

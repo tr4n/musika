@@ -1,14 +1,14 @@
 import 'package:musium/data/model/models.dart';
-import 'package:musium/data/platform/network/response/home_item_data_response.dart';
+import 'package:musium/data/model/home_section_item.dart';
 
-import '../../../../common/common.dart';
+import '../../../common/common.dart';
 
-class BannersResponse extends HomeItemDataResponse {
+class Banners extends HomeSectionItem {
   List<MusicBanner>? items;
 
-  BannersResponse({this.items});
+  Banners({this.items});
 
-  BannersResponse.fromJson(Map<String, dynamic> json) {
+  Banners.fromJson(Map<String, dynamic> json) {
     sectionType = json['sectionType'];
     title = json['title'];
     items = cast<List<dynamic>?>(json["items"])

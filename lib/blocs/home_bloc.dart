@@ -1,12 +1,8 @@
-import 'package:musium/data/model/mixes.dart';
-import 'package:musium/data/platform/network/response/banners_response.dart';
-import 'package:musium/data/platform/network/response/livestreams_response.dart';
 import 'package:musium/data/repository/repositories.dart';
 import 'package:musium/di/locator.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../data/model/models.dart';
-import '../data/platform/network/response/responses.dart';
 
 class HomeBloc {
   final _zingRepository = locator<ZingRepository>();
@@ -40,23 +36,23 @@ class HomeBloc {
     final items = homeResponse.data?.items ?? List.empty();
 
     for (var item in items) {
-      if (item is BannersResponse) {
+      if (item is Banners) {
         musicBanners
             .addAll(item.items?.whereType<MusicBanner>() ?? List.empty());
       }
-      if (item is ArtistSpotlightsResponse) {
+      if (item is ArtistSpotlights) {
         artists.addAll(item.items?.whereType<Artist>() ?? List.empty());
       }
-      if (item is PlaylistsResponse) {
-        playlistsList.add(Playlists.fromResponse(item));
+      if (item is Playlists) {
+        playlistsList.add(item);
       }
-      if (item is LivestreamsResponse) {
+      if (item is Livestreams) {
         livestreams.addAll(item.items?.whereType<Livestream>() ?? List.empty());
       }
-      if (item is MixesResponse) {
-        mixesList.add(Mixes.fromResponse(item));
+      if (item is Mixes) {
+        mixesList.add(item);
       }
-      if (item is NewReleasesResponse) {
+      if (item is NewReleases) {
         newReleases.addAll(item.items?.all ?? List.empty());
       }
     }

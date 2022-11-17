@@ -60,6 +60,11 @@ class ZingMp3Api {
     return HomeResponse.fromJson(response.data);
   }
 
+  Future<HomeResponse> getDetailPlaylist(String encodeId) async {
+    final response = await _dio.get("${Urls.detailPlaylist}?id=$encodeId");
+    return HomeResponse.fromJson(response.data);
+  }
+
   Response _handelError(dynamic error, String url) {
     try {
       if (error is DioError) {

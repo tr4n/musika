@@ -12,11 +12,7 @@ class ItemPlaylists extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final playlistItems = playlists.items;
-    final title = playlists.title;
-    if (playlistItems == null ||
-        playlistItems.isEmpty ||
-        title == null ||
-        title.isEmpty) {
+    if (playlistItems == null || playlistItems.isEmpty) {
       return const SizedBox();
     }
     return Container(
@@ -33,7 +29,9 @@ class ItemPlaylists extends StatelessWidget {
               color: Colors.black,
             ),
             child: Text(
-              playlists.title ?? lorem(paragraphs: 1, words: 5),
+              playlists.title?.isNotEmpty == true
+                  ? playlists.title ?? ""
+                  : "Albums",
               textAlign: TextAlign.start,
             ),
           ),
@@ -70,7 +68,7 @@ class ItemPlaylists extends StatelessWidget {
           const SizedBox(height: Sizes.size12),
           SizedBox(
             width: Sizes.size150,
-            child:  DefaultTextStyle(
+            child: DefaultTextStyle(
               style: const TextStyle(
                 color: Colors.black,
                 fontSize: Sizes.size14,

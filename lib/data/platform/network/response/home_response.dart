@@ -1,10 +1,4 @@
-import 'package:musium/data/platform/network/response/artist_spotlights_response.dart';
-import 'package:musium/data/platform/network/response/banners_response.dart';
-import 'package:musium/data/platform/network/response/home_item_data_response.dart';
-import 'package:musium/data/platform/network/response/livestreams_response.dart';
-import 'package:musium/data/platform/network/response/mixes_response.dart';
-import 'package:musium/data/platform/network/response/new_releases_response.dart';
-import 'package:musium/data/platform/network/response/playlists_response.dart';
+import 'package:musium/data/model/models.dart';
 
 import '../../../../common/common.dart';
 import '../../../../common/type/types.dart';
@@ -34,30 +28,30 @@ class HomeResponse {
 class HomeResponseData {
   bool? hasMore;
   int? total;
-  List<HomeItemDataResponse>? items;
+  List<HomeSectionItem>? items;
 
   HomeResponseData({this.items, this.hasMore, this.total});
 
   HomeResponseData.fromJson(Map<String, dynamic> json) {
-    this.items = cast<List<dynamic>>(json["items"])?.map((itemJson) {
-      final item = HomeItemDataResponse.fromJson(itemJson);
+    items = cast<List<dynamic>>(json["items"])?.map((itemJson) {
+      final item = HomeSectionItem.fromJson(itemJson);
       if (item.sectionType == SectionType.newRelease.value) {
-        return NewReleasesResponse.fromJson(itemJson);
+        return NewReleases.fromJson(itemJson);
       }
       if (item.sectionType == SectionType.playlist.value) {
-        return PlaylistsResponse.fromJson(itemJson);
+        return Playlists.fromJson(itemJson);
       }
       if (item.sectionType == SectionType.mix.value) {
-        return MixesResponse.fromJson(itemJson);
+        return Mixes.fromJson(itemJson);
       }
       if (item.sectionType == SectionType.artistSpotlight.value) {
-        return ArtistSpotlightsResponse.fromJson(itemJson);
+        return ArtistSpotlights.fromJson(itemJson);
       }
       if (item.sectionType == SectionType.banner.value) {
-        return BannersResponse.fromJson(itemJson);
+        return Banners.fromJson(itemJson);
       }
       if (item.sectionType == SectionType.livestream.value) {
-        return LivestreamsResponse.fromJson(itemJson);
+        return Livestreams.fromJson(itemJson);
       }
       return item;
     }).toList();

@@ -1,10 +1,10 @@
-class HomeItemDataResponse {
+class HomeSectionItem {
   String? sectionType = "";
   String? title = "";
 
-  HomeItemDataResponse({this.sectionType, this.title});
+  HomeSectionItem({this.sectionType, this.title});
 
-  HomeItemDataResponse.fromJson(Map<String, dynamic> json) {
+  HomeSectionItem.fromJson(Map<String, dynamic> json) {
     sectionType = json['sectionType'];
     title = json['title'];
   }

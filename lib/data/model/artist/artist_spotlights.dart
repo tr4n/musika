@@ -1,16 +1,17 @@
-import '../../../../extension/collection_ext.dart';
-import 'responses.dart';
+import '../../../extension/collection_ext.dart';
+import '../home_section_item.dart';
+import 'artist.dart';
 
-class MixesResponse extends HomeItemDataResponse {
-  List<Mix>? items;
+class ArtistSpotlights extends HomeSectionItem {
+  List<Artist>? items;
 
-  MixesResponse({this.items});
+  ArtistSpotlights({this.items});
 
-  MixesResponse.fromJson(Map<String, dynamic> json) {
+  ArtistSpotlights.fromJson(Map<String, dynamic> json) {
     sectionType = json['sectionType'];
     title = json['title'];
     items = cast<List<dynamic>>(json["items"])
-        ?.map((e) => Mix.fromJson(e))
+        ?.map((e) => Artist.fromJson(e))
         .toList();
   }
 
@@ -21,4 +22,3 @@ class MixesResponse extends HomeItemDataResponse {
     return data;
   }
 }
-

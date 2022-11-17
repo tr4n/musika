@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_lorem/flutter_lorem.dart';
-import 'package:musium/data/model/artist.dart';
+import 'package:musium/data/model/artist/artist.dart';
 
 import '../../resources/resources.dart';
 

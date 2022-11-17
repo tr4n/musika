@@ -1,11 +1,11 @@
-import '../../extension/collection_ext.dart';
-import '../platform/network/response/responses.dart';
+import '../models.dart';
 
-class Playlist {
+class Mix {
   String? encodeId;
-  String? thumbnail;
   String? title;
+  String? thumbnail;
   bool? isOfficial;
+  String? link;
   bool? isIndie;
   String? releaseDate;
   String? sortDescription;
@@ -24,11 +24,12 @@ class Playlist {
   String? textType;
   bool? isSingle;
 
-  Playlist(
+  Mix(
       {this.encodeId,
       this.title,
       this.thumbnail,
       this.isOfficial,
+      this.link,
       this.isIndie,
       this.releaseDate,
       this.sortDescription,
@@ -47,17 +48,16 @@ class Playlist {
       this.textType,
       this.isSingle});
 
-  Playlist.fromJson(Map<String, dynamic> json) {
+  Mix.fromJson(Map<String, dynamic> json) {
     encodeId = json['encodeId'];
     title = json['title'];
     thumbnail = json['thumbnail'];
     isOfficial = json['isoffical'];
+    link = json['link'];
     isIndie = json['isIndie'];
     releaseDate = json['releaseDate'];
     sortDescription = json['sortDescription'];
-    genreIds = cast<List<dynamic>>(json['genreIds'])
-        ?.map((e) => e.toString())
-        .toList();
+    genreIds = json['genreIds'].cast<String>();
     pR = json['PR'];
     if (json['artists'] != null) {
       artists = <Artist>[];
@@ -84,13 +84,14 @@ class Playlist {
     data['title'] = title;
     data['thumbnail'] = thumbnail;
     data['isoffical'] = isOfficial;
+    data['link'] = link;
     data['isIndie'] = isIndie;
     data['releaseDate'] = releaseDate;
     data['sortDescription'] = sortDescription;
     data['genreIds'] = genreIds;
     data['PR'] = pR;
     if (artists != null) {
-      data['artists'] = artists?.map((v) => v.toJson()).toList();
+      data['artists'] = artists!.map((v) => v.toJson()).toList();
     }
     data['artistsNames'] = artistsNames;
     data['playItemMode'] = playItemMode;

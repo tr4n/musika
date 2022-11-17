@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_lorem/flutter_lorem.dart';
-import 'package:musium/data/model/mixes.dart';
+import 'package:musium/data/model/mix/mixes.dart';
 
 import '../../data/model/models.dart';
 import '../../resources/resources.dart';

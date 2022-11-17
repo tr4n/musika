@@ -1,14 +1,14 @@
-import 'package:musium/data/platform/network/response/home_item_data_response.dart';
-import 'package:musium/data/model/livestream.dart';
+import 'package:musium/data/model/home_section_item.dart';
+import 'package:musium/data/model/livestream/livestream.dart';
 
-import '../../../../extension/collection_ext.dart';
+import '../../../extension/collection_ext.dart';
 
-class LivestreamsResponse extends HomeItemDataResponse {
+class Livestreams extends HomeSectionItem {
   List<Livestream>? items;
 
-  LivestreamsResponse({this.items});
+  Livestreams({this.items});
 
-  LivestreamsResponse.fromJson(Map<String, dynamic> json) {
+  Livestreams.fromJson(Map<String, dynamic> json) {
     sectionType = json['sectionType'];
     title = json['title'];
     items = cast<List<dynamic>>(json["items"])
