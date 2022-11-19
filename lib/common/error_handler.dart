@@ -16,27 +16,27 @@ ErrorResponse handelError(dynamic error) {
           if (error.error is SocketException) {
             return ErrorResponse(
               data: error.error,
-              statusMessage: error.message,
-              statusCode: ErrorResponse.NETWORK_ERROR_CODE,
+              message: error.message,
+              code: ErrorResponse.NETWORK_ERROR_CODE,
               path: "",
             );
           }
           return ErrorResponse(
             data: error.error,
-            statusMessage: error.message,
+            message: error.message,
             path: "",
           );
         case DioErrorType.response:
           return ErrorResponse(
             data: error.response!.data,
-            statusMessage: error.response!.statusMessage,
-            statusCode: error.response!.statusCode,
+            message: error.response!.statusMessage,
+            code: error.response!.statusCode,
             path: "",
           );
         default:
           return ErrorResponse(
             data: error.error,
-            statusMessage: error.message,
+            message: error.message,
             path: "",
           );
       }

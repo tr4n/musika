@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:musium/blocs/playlist_bloc.dart';
+import 'package:musium/common/common.dart';
 import 'package:musium/data/model/models.dart';
 import 'package:musium/extension/context_ext.dart';
+import 'package:musium/ui/components/songs/song_list.dart';
 
 import '../../resources/resources.dart';
 
@@ -14,21 +17,32 @@ class PlaylistScreen extends StatefulWidget {
 }
 
 class _PlaylistScreenState extends State<PlaylistScreen> {
+  final _playlistBloc = PlaylistBloc();
+  AlertDialog? _loadingDialog;
+
+  void _onBackPress() {
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
+    _playlistBloc.getDetailPlaylist(widget.playlist.encodeId ?? "");
+    _observeData();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: Padding(
+        leading: IconButton(
           padding: const EdgeInsets.only(left: Sizes.size16),
-          child: Image.asset("assets/icons/ic_arrow_left.png"),
+          icon: Image.asset("assets/icons/ic_arrow_left.png"),
+          onPressed: _onBackPress,
         ),
         leadingWidth: Sizes.size44,
         actions: [
-          Padding(
+          IconButton(
+            onPressed: null,
             padding: const EdgeInsets.only(right: Sizes.size16),
-            child: Image.asset(
+            icon: Image.asset(
               "assets/icons/ic_more_circle.png",
               width: Sizes.size28,
               height: Sizes.size28,
@@ -41,75 +55,120 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
     );
   }
 
+  void _observeData() {
+    StreamBuilder(
+      stream: _playlistBloc.errorObservable,
+      builder: (context, snapshot) {
+        CustomSnackBar.of(context).show(snapshot.data?.statusMessage ?? "");
+        return const SizedBox();
+      },
+    );
+    StreamBuilder(
+      stream: _playlistBloc.loading,
+      builder: (context, snapshot) {
+        if (snapshot.data == true) {
+          _loadingDialog = AlertDialog(
+            content: CircularProgressIndicator(color: AppColor.green06C149),
+          );
+          showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) {
+              return _loadingDialog ?? const SizedBox();
+            },
+          );
+        } else if (_loadingDialog != null) {
+          _loadingDialog = null;
+          Navigator.pop(context);
+        }
+
+        return const SizedBox();
+      },
+    );
+  }
+
   Widget _playlistBody() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _information(),
-          const SizedBox(height: Sizes.size16),
-          _actions(),
-          const SizedBox(height: Sizes.size16),
-          Container(
-            height: Sizes.size1,
-            margin: const EdgeInsets.symmetric(horizontal: Sizes.size20),
-            color: Colors.black12,
+    return StreamBuilder(
+      stream: _playlistBloc.detailPlaylistObservable,
+      builder: (context, snapshot) {
+        final detailPlaylist = snapshot.data;
+        if (detailPlaylist == null) {
+          return Center(
+              child: CircularProgressIndicator(color: AppColor.green06C149));
+        }
+        return SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _information(),
+              const SizedBox(height: Sizes.size16),
+              _actions(),
+              const SizedBox(height: Sizes.size16),
+              Container(
+                height: Sizes.size1,
+                margin: const EdgeInsets.symmetric(horizontal: Sizes.size20),
+                color: Colors.black12,
+              ),
+              const SizedBox(height: Sizes.size16),
+              _songList(detailPlaylist),
+            ],
           ),
-          const SizedBox(height: Sizes.size16),
-          _songs(),
-        ],
-      ),
+        );
+      },
     );
   }
 
   Widget _information() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SizedBox(width: context.screenWidth),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(Sizes.size32),
-          child: Image.network(
-            widget.playlist.thumbnailM ??
-                "https://api.lorem.space/image/album?w=250&h=250",
-            width: Sizes.size200,
-            height: Sizes.size200,
-            fit: BoxFit.cover,
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: Sizes.size20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(width: context.screenWidth),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(Sizes.size32),
+            child: Image.network(
+              widget.playlist.thumbnailM ??
+                  "https://api.lorem.space/image/album?w=250&h=250",
+              width: Sizes.size200,
+              height: Sizes.size200,
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        const SizedBox(height: Sizes.size16),
-        DefaultTextStyle(
-          style: const TextStyle(
-            fontSize: Sizes.size24,
-            fontWeight: FontWeight.w700,
-            color: Colors.black,
+          const SizedBox(height: Sizes.size16),
+          DefaultTextStyle(
+            style: const TextStyle(
+              fontSize: Sizes.size24,
+              fontWeight: FontWeight.w700,
+              color: Colors.black,
+            ),
+            child: Text(widget.playlist.title ?? ""),
           ),
-          child: Text(widget.playlist.title ?? ""),
-        ),
-        const SizedBox(height: Sizes.size16),
-        DefaultTextStyle(
-          style: const TextStyle(
-            fontSize: Sizes.size18,
-            color: Colors.black,
+          const SizedBox(height: Sizes.size16),
+          DefaultTextStyle(
+            style: const TextStyle(
+              fontSize: Sizes.size18,
+              color: Colors.black,
+            ),
+            child: Text(widget.playlist.artistsNames ?? ""),
           ),
-          child: Text(widget.playlist.artistsNames ?? ""),
-        ),
-        const SizedBox(height: Sizes.size12),
-        DefaultTextStyle(
-          style: const TextStyle(
-            fontSize: Sizes.size14,
-            fontWeight: FontWeight.w200,
-            color: Colors.black,
+          const SizedBox(height: Sizes.size12),
+          DefaultTextStyle(
+            style: const TextStyle(
+              fontSize: Sizes.size14,
+              fontWeight: FontWeight.w200,
+              color: Colors.black,
+            ),
+            child: Text(
+              widget.playlist.sortDescription ?? "",
+              textAlign: TextAlign.center,
+            ),
           ),
-          child: Text(
-            widget.playlist.sortDescription ?? "",
-            textAlign: TextAlign.center,
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -128,97 +187,63 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                 height: Sizes.size24,
               ),
               const SizedBox(width: Sizes.size20),
-              const Icon(
-                Icons.playlist_add,
-                size: Sizes.size28,
+              const IconButton(
+                icon: Icon(Icons.playlist_add),
+                iconSize: Sizes.size28,
                 color: Colors.black87,
+                onPressed: null,
               ),
               const SizedBox(width: Sizes.size20),
-              const Icon(
-                Icons.more_vert,
-                size: Sizes.size28,
+              const IconButton(
+                icon: Icon(Icons.more_vert),
+                iconSize: Sizes.size28,
                 color: Colors.black87,
+                onPressed: null,
               ),
             ],
           ),
-          _playButton(),
+          _buttonPlay()
         ],
       ),
     );
   }
 
-  Widget _playButton() {
-    return GestureDetector(
-      onTap: null,
-      child: Container(
-        padding: const EdgeInsets.only(
-          left: Sizes.size20,
-          top: Sizes.size12,
-          right: Sizes.size20,
-          bottom: Sizes.size12,
+  Widget _buttonPlay() {
+    return ElevatedButton.icon(
+      icon: Image.asset(
+        "assets/icons/ic_play_filled.png",
+        width: Sizes.size20,
+        height: Sizes.size20,
+      ),
+      label: const DefaultTextStyle(
+        style: TextStyle(
+          fontSize: Sizes.size16,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
         ),
-        decoration: BoxDecoration(
-          color: AppColor.green06C149,
-          borderRadius: const BorderRadius.all(Radius.circular(Sizes.size100)),
-          boxShadow: [
-            BoxShadow(
-              color: AppColor.green06C149.withOpacity(0.3),
-              spreadRadius: 5,
-              blurRadius: 75,
-              offset: const Offset(0, 3), // changes position of shadow
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Image.asset(
-              "assets/icons/ic_play_filled.png",
-              width: Sizes.size20,
-              height: Sizes.size20,
-            ),
-            const SizedBox(width: Sizes.size8),
-            const DefaultTextStyle(
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: Sizes.size16,
-                fontWeight: FontWeight.w700,
-              ),
-              child: Text("Play", textAlign: TextAlign.center),
-            ),
-          ],
+        child: Text("Play", textAlign: TextAlign.start),
+      ),
+      onPressed: () {},
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColor.green06C149,
+        foregroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(
+            vertical: Sizes.size12, horizontal: Sizes.size16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Sizes.size32),
         ),
       ),
     );
   }
 
-  Widget _songs() {
-    return Column(
-      children: [
-        Row(
-          children: [
-            const SizedBox(width: Sizes.size20),
-            const DefaultTextStyle(
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: Sizes.size20,
-                fontWeight: FontWeight.w700,
-              ),
-              child: Text("Songs", textAlign: TextAlign.start),
-            ),
-            Expanded(
-              child: DefaultTextStyle(
-                style: TextStyle(
-                  color: AppColor.green06C149,
-                  fontSize: Sizes.size16,
-                  fontWeight: FontWeight.w700,
-                ),
-                child: const Text("See All", textAlign: TextAlign.end),
-              ),
-            ),
-            const SizedBox(width: Sizes.size20),
-          ],
-        )
-      ],
-    );
+  Widget _songList(DetailPlaylist detailPlaylist) {
+    final songs = detailPlaylist.songs;
+    return songs != null
+        ? SongList(
+            title: "Songs",
+            songs: songs,
+            onTapSeeAll: () {},
+          )
+        : const SizedBox();
   }
 }

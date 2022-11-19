@@ -2,18 +2,27 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../data/platform/network/response/responses.dart';
-import 'base.dart';
 
-// abstract class BaseBloc extends Bloc<BaseEvent, BaseState> {
-//   BaseBloc(BaseState initialState) : super(const InitState());
-// }
+abstract class BaseBloc {
+  final _error = PublishSubject<ErrorResponse>();
+  final loading = PublishSubject<bool>();
 
-abstract class BaseBloc<Event extends BaseEvent, State extends BaseState>
-    extends Bloc<Event, State> {
-  BaseBloc(super.initialState);
+  Stream<ErrorResponse> get errorObservable => _error.stream;
+
+  void addError(ErrorResponse err) {
+    _error.sink.add(err);
+  }
+
+  void runCatching(Function() callback) {
+    try {
+      callback();
+    } catch (e) {
+      addError(handelError(e));
+    }
+  }
 
   @protected
   ErrorResponse handelError(dynamic error) {
@@ -28,27 +37,27 @@ abstract class BaseBloc<Event extends BaseEvent, State extends BaseState>
             if (error.error is SocketException) {
               return ErrorResponse(
                 data: error.error,
-                statusMessage: error.message,
-                statusCode: ErrorResponse.NETWORK_ERROR_CODE,
+                message: error.message,
+                code: ErrorResponse.NETWORK_ERROR_CODE,
                 path: "",
               );
             }
             return ErrorResponse(
               data: error.error,
-              statusMessage: error.message,
+              message: error.message,
               path: "",
             );
           case DioErrorType.response:
             return ErrorResponse(
               data: error.response!.data,
-              statusMessage: error.response!.statusMessage,
-              statusCode: error.response!.statusCode,
+              message: error.response!.statusMessage,
+              code: error.response!.statusCode,
               path: "",
             );
           default:
             return ErrorResponse(
               data: error.error,
-              statusMessage: error.message,
+              message: error.message,
               path: "",
             );
         }

@@ -29,7 +29,7 @@ class DetailPlaylist {
   int? contentLastUpdate;
   Artist? artist;
   List<Genre>? genres;
-  Songs? song;
+  Songs? songs;
   int? like;
   int? listen;
   bool? liked;
@@ -63,7 +63,7 @@ class DetailPlaylist {
       this.contentLastUpdate,
       this.artist,
       this.genres,
-      this.song,
+      this.songs,
       this.like,
       this.listen,
       this.liked});
@@ -107,7 +107,7 @@ class DetailPlaylist {
         genres!.add(Genre.fromJson(v));
       });
     }
-    song = json['song'] != null ? Songs.fromJson(json['song']) : null;
+    songs = json['song'] != null ? Songs.fromJson(json['song']) : null;
     like = json['like'];
     listen = json['listen'];
     liked = json['liked'];
@@ -143,8 +143,8 @@ class DetailPlaylist {
     data['contentLastUpdate'] = contentLastUpdate;
     data['artist'] = artist?.toJson();
     data['genres'] = genres?.map((v) => v.toJson()).toList();
-    if (song != null) {
-      data['song'] = song!.toJson();
+    if (songs != null) {
+      data['song'] = songs!.toJson();
     }
     data['like'] = like;
     data['listen'] = listen;

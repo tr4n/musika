@@ -5,12 +5,12 @@ class ErrorResponse extends Response {
 
   ErrorResponse({
     dynamic data,
-    int? statusCode,
-    String? statusMessage,
-    required String path,
+    int? code,
+    String? message,
+    String path = "",
   }) : super(
             data: data,
-            statusCode: statusCode,
-            statusMessage: statusMessage,
+            statusCode: code,
+            statusMessage: message,
             requestOptions: RequestOptions(path: path));
 }

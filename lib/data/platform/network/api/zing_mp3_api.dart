@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:musium/data/platform/network/api/urls.dart';
+import 'package:musium/data/platform/network/response/detail_playlist_response.dart';
 import 'package:musium/data/platform/network/response/home_response.dart';
 
 import '../response/error_response.dart';
@@ -60,9 +61,9 @@ class ZingMp3Api {
     return HomeResponse.fromJson(response.data);
   }
 
-  Future<HomeResponse> getDetailPlaylist(String encodeId) async {
+  Future<DetailPlaylistResponse> getDetailPlaylist(String encodeId) async {
     final response = await _dio.get("${Urls.detailPlaylist}?id=$encodeId");
-    return HomeResponse.fromJson(response.data);
+    return DetailPlaylistResponse.fromJson(response.data);
   }
 
   Response _handelError(dynamic error, String url) {
@@ -77,27 +78,27 @@ class ZingMp3Api {
             if (error.error is SocketException) {
               return ErrorResponse(
                 data: error.error,
-                statusMessage: error.message,
-                statusCode: ErrorResponse.NETWORK_ERROR_CODE,
+                message: error.message,
+                code: ErrorResponse.NETWORK_ERROR_CODE,
                 path: url,
               );
             }
             return ErrorResponse(
               data: error.error,
-              statusMessage: error.message,
+              message: error.message,
               path: url,
             );
           case DioErrorType.response:
             return ErrorResponse(
               data: error.response!.data,
-              statusMessage: error.response!.statusMessage,
-              statusCode: error.response!.statusCode,
+              message: error.response!.statusMessage,
+              code: error.response!.statusCode,
               path: url,
             );
           default:
             return ErrorResponse(
               data: error.error,
-              statusMessage: error.message,
+              message: error.message,
               path: url,
             );
         }

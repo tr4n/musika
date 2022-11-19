@@ -10,4 +10,8 @@ class ZingRepository {
   Future<HomeResponse> getHomeData() async {
     return _api.getHomeData();
   }
+
+  Future<DetailPlaylistResponse> getDetailPlaylist(String encodeId) async {
+    return _api.getDetailPlaylist(encodeId);
+  }
 }
