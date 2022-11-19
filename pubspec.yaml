@@ -49,6 +49,8 @@ dependencies:
   spotify_sdk: ^2.3.0
   flutter_lorem: ^2.0.0
   carousel_slider: ^4.1.1
+  crypto: ^3.0.2
+  http_interceptor: ^1.0.2
 
 dev_dependencies:
   flutter_test:

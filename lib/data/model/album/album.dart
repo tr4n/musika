@@ -1,3 +1,5 @@
+import '../../../extension/collection_ext.dart';
+
 class Album {
   String? encodeId;
   String? title;
@@ -33,7 +35,9 @@ class Album {
     isIndie = json['isIndie'];
     releaseDate = json['releaseDate'];
     sortDescription = json['sortDescription'];
-    genreIds = json['genreIds'].cast<String>();
+    genreIds = cast<List<dynamic>>(json['genreIds'])
+        ?.map((e) => e.toString())
+        .toList();
     pR = json['PR'];
     artistsNames = json['artistsNames'];
   }

@@ -4,6 +4,7 @@ import 'package:musium/common/common.dart';
 import 'package:musium/data/model/models.dart';
 import 'package:musium/extension/context_ext.dart';
 import 'package:musium/ui/components/songs/song_list.dart';
+import 'package:musium/ui/screens/play_song_screen.dart';
 
 import '../../resources/resources.dart';
 
@@ -22,6 +23,11 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
 
   void _onBackPress() {
     Navigator.pop(context);
+  }
+
+  void _onPlaySong(Song song) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => PlaySongScreen(song)));
   }
 
   @override
@@ -240,9 +246,10 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
     final songs = detailPlaylist.songs;
     return songs != null
         ? SongList(
-            title: "Songs",
+      title: "Songs",
             songs: songs,
             onTapSeeAll: () {},
+            onPlaySong: _onPlaySong,
           )
         : const SizedBox();
   }

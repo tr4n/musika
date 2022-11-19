@@ -7,11 +7,16 @@ import '../../../resources/resources.dart';
 class SongList extends StatelessWidget {
   String title;
   Function()? onTapSeeAll;
+  Function(Song)? onPlaySong;
 
   Songs songs;
 
   SongList(
-      {required this.songs, required this.title, this.onTapSeeAll, super.key});
+      {required this.songs,
+      required this.title,
+      this.onTapSeeAll,
+      this.onPlaySong,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +28,13 @@ class SongList extends StatelessWidget {
       children: [
         _title(),
         const SizedBox(height: Sizes.size8),
-        Column(children: listSong.map((e) => ItemSong(song: e)).toList()),
+        Column(
+            children: listSong
+                .map((e) => ItemSong(
+                      song: e,
+                      onPlay: onPlaySong,
+                    ))
+                .toList()),
       ],
     );
   }

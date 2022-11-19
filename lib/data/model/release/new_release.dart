@@ -1,3 +1,4 @@
+import '../../../extension/collection_ext.dart';
 import '../artist/artist.dart';
 
 class NewRelease {
@@ -67,7 +68,9 @@ class NewRelease {
     isPrivate = json['isPrivate'];
     preRelease = json['preRelease'];
     releaseDate = json['releaseDate'];
-    genreIds = json['genreIds'].cast<String>();
+    genreIds = cast<List<dynamic>>(json['genreIds'])
+        ?.map((e) => e.toString())
+        .toList();
     isIndie = json['isIndie'];
     streamingStatus = json['streamingStatus'];
     allowAudioAds = json['allowAudioAds'];

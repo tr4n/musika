@@ -3,6 +3,7 @@ class Urls {
   static const _baseUrl = "https://server-tau-six.vercel.app/api";
   static const home = '$_baseUrl/home';
   static const detailPlaylist = '$_baseUrl/detailplaylist';
+  static const song = '$_baseUrl/song';
 
   // Image
   static const _baseImageUrl = 'https://image.tmdb.org/t/p';

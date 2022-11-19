@@ -13,7 +13,7 @@ class HomeResponse {
   HomeResponse.fromJson(Map<String, dynamic> json) {
     err = json['err'];
     msg = json['msg'];
-    data = json["data"] != null ? HomeResponseData.fromJson(json["data"]) : null;
+    data = HomeResponseData.fromJson(json["data"]);
   }
 
   Map<String, dynamic> toJson() {

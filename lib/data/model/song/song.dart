@@ -1,3 +1,4 @@
+import '../../../extension/collection_ext.dart';
 import '../album/album.dart';
 import '../artist/artist.dart';
 
@@ -73,7 +74,9 @@ class Song {
     isPrivate = json['isPrivate'];
     preRelease = json['preRelease'];
     releaseDate = json['releaseDate'];
-    genreIds = json['genreIds'].cast<String>();
+    genreIds = cast<List<dynamic>>(json['genreIds'])
+        ?.map((e) => e.toString())
+        .toList();
     album = json['album'] != null ? Album.fromJson(json['album']) : null;
     isIndie = json['isIndie'];
     mvlink = json['mvlink'];

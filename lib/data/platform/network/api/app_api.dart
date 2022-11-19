@@ -1,43 +1,53 @@
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
-import 'package:musium/data/platform/network/api/urls.dart';
+import 'package:musium/data/platform/network/api/zing_api.dart';
 import 'package:musium/data/platform/network/response/detail_playlist_response.dart';
 import 'package:musium/data/platform/network/response/home_response.dart';
 
 import '../response/error_response.dart';
 
 class ZingMp3Api {
-  final int _timeOut = 10000; //10s
+  final int _timeOut = 1000000; //10s
   late Dio _dio;
-  static const _apiKey = "d61ca0998c8a152c6556e310a4a8e4db";
+  String? cookie;
 
   ZingMp3Api() {
     BaseOptions options =
         BaseOptions(connectTimeout: _timeOut, receiveTimeout: _timeOut);
-    Map<String, dynamic> headers = {};
-    /*
-    Http request headers.
-    headers["content-type"] = "application/json";
-   */
+    Map<String, dynamic> headers = {
+      'content-type': 'text/html;UTF-8;charset=utf-8'
+    };
     options.headers = headers;
     _dio = Dio(options)
       ..interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
   }
 
-  Future<Response?> get(
-      {required String url, Map<String, dynamic> params = const {}}) async {
+  Future<String?> _getCookie(String url) async {
     try {
-      return await _dio.get(
-        url,
-        queryParameters: params,
-        options: Options(responseType: ResponseType.json),
-      );
-    } on DioError catch (e) {
-      //handle error
-      _handelError(e, url);
-      print("DioError: ${e.toString()}");
+      if (cookie == null) {
+        final response = await _dio.get(url);
+        final newCookie = response.headers[HttpHeaders.setCookieHeader];
+        cookie = newCookie?.firstOrNull;
+      }
+      return cookie;
+    } catch (e) {
+      return null;
     }
+  }
+
+  Future<Response<T>> _get<T>(String url,
+      {Map<String, dynamic> params = const {}}) async {
+    final cookie = await _getCookie(url);
+    final options = Options(headers: {
+      "Cookie": cookie ?? "",
+    }, responseType: ResponseType.json);
+    return await _dio.get(
+      url,
+      queryParameters: params,
+      options: options,
+    );
   }
 
   Future<Response?> post(
@@ -57,12 +67,15 @@ class ZingMp3Api {
   }
 
   Future<HomeResponse> getHomeData() async {
-    final response = await _dio.get(Urls.home);
-    return HomeResponse.fromJson(response.data);
+    final url = ZingApi.apiHome();
+    final response = await _get(url);
+    final homeResponse = HomeResponse.fromJson(response.data);
+    return homeResponse;
   }
 
   Future<DetailPlaylistResponse> getDetailPlaylist(String encodeId) async {
-    final response = await _dio.get("${Urls.detailPlaylist}?id=$encodeId");
+    final url = ZingApi.apiDetailPlaylist(encodeId);
+    final response = await _get(url);
     return DetailPlaylistResponse.fromJson(response.data);
   }
 

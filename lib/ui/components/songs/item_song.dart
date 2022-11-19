@@ -5,8 +5,9 @@ import '../../../resources/resources.dart';
 
 class ItemSong extends StatelessWidget {
   Song song;
+  Function(Song)? onPlay;
 
-  ItemSong({required this.song, super.key});
+  ItemSong({required this.song, this.onPlay, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -72,18 +73,11 @@ class ItemSong extends StatelessWidget {
   }
 
   Widget _buttonPlay() {
-    return Ink(
-      decoration: ShapeDecoration(
-        color: AppColor.green06C149,
-        shape: const CircleBorder(),
-      ),
-      padding: const EdgeInsets.all(Sizes.size8),
-      child: Image.asset(
-        "assets/icons/ic_play_filled.png",
-        color: Colors.white,
-        width: Sizes.size16,
-        height: Sizes.size16,
-      ),
+    return IconButton(
+      icon: const Icon(Icons.play_circle_fill_rounded),
+      iconSize: Sizes.size28,
+      color: AppColor.green06C149,
+      onPressed: () => onPlay?.call(song),
     );
   }
 
