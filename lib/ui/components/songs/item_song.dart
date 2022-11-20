@@ -33,42 +33,48 @@ class ItemSong extends StatelessWidget {
   }
 
   Widget _cover() {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(Sizes.size20),
-      child: Image.network(
-        song.thumbnail ?? "https://api.lorem.space/image/album?w=100&h=100",
-        width: Sizes.size80,
-        height: Sizes.size80,
-        fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: () => onPlay?.call(song),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(Sizes.size20),
+        child: Image.network(
+          song.thumbnail ?? "https://api.lorem.space/image/album?w=100&h=100",
+          width: Sizes.size80,
+          height: Sizes.size80,
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }
 
   Widget _nameAndArtists() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: DefaultTextStyle(
+    return GestureDetector(
+      onTap: () => onPlay?.call(song),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: DefaultTextStyle(
+              style: const TextStyle(
+                fontSize: Sizes.size14,
+                fontWeight: FontWeight.w700,
+                color: Colors.black,
+              ),
+              child: Text(song.title ?? ""),
+            ),
+          ),
+          const SizedBox(height: Sizes.size8),
+          DefaultTextStyle(
             style: const TextStyle(
-              fontSize: Sizes.size14,
-              fontWeight: FontWeight.w700,
+              fontSize: Sizes.size12,
+              fontWeight: FontWeight.w300,
               color: Colors.black,
             ),
-            child: Text(song.title ?? ""),
+            child: Text(song.artistsNames ?? ""),
           ),
-        ),
-        const SizedBox(height: Sizes.size8),
-        DefaultTextStyle(
-          style: const TextStyle(
-            fontSize: Sizes.size12,
-            fontWeight: FontWeight.w300,
-            color: Colors.black,
-          ),
-          child: Text(song.artistsNames ?? ""),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

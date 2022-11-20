@@ -51,6 +51,8 @@ dependencies:
   carousel_slider: ^4.1.1
   crypto: ^3.0.2
   http_interceptor: ^1.0.2
+  just_audio: ^0.9.30
+  just_audio_libwinmedia: ^0.0.4+1
 
 dev_dependencies:
   flutter_test:

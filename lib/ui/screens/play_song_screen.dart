@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:musium/blocs/play_song_bloc.dart';
 import 'package:musium/data/model/models.dart';
 import 'package:musium/extension/context_ext.dart';
@@ -18,14 +19,41 @@ class PlaySongScreen extends StatefulWidget {
 class _PlaySongScreenState extends State<PlaySongScreen>
     with SingleTickerProviderStateMixin {
   final _playSongBloc = PlaySongBloc();
+  final _audioPlayer = AudioPlayer();
+  var _streamUrl = "";
 
   void _onBackPress() {
     Navigator.pop(context);
   }
 
+  void _playSong() async {
+    await _audioPlayer.setUrl(_streamUrl);
+    await _audioPlayer.play();
+  }
+
+  void _pause() async {
+    await _audioPlayer.pause();
+  }
+
+  void _resume() async {
+    await _audioPlayer.play();
+  }
+
+  void _seekTo(int seconds) async {
+    await _audioPlayer.seek(Duration(seconds: seconds));
+  }
+
+  @override
+  void dispose() {
+    // Release decoders and buffers back to the operating system making them
+    // available for other apps to use.
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    _playSongBloc.getDetailPlaylist("6B7W7IWA");
+    _playSongBloc.getSongData(widget.song.encodeId ?? "");
     _observeData();
     return Scaffold(
       appBar: AppBar(
@@ -72,13 +100,14 @@ class _PlaySongScreenState extends State<PlaySongScreen>
 
   Widget _playSongBody() {
     return StreamBuilder(
-      stream: _playSongBloc.detailPlayListObservable,
+      stream: _playSongBloc.songStreamObservable,
       builder: (context, snapshot) {
-        final detailPlaylist = snapshot.data;
-        if (detailPlaylist == null) {
+        _streamUrl = snapshot.data ?? "";
+        if (_streamUrl.isEmpty) {
           return Center(
               child: CircularProgressIndicator(color: AppColor.green06C149));
         }
+        _playSong();
         return Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -166,13 +195,13 @@ class _PlaySongScreenState extends State<PlaySongScreen>
 
   Widget _seekBar() {
     return StreamBuilder(
-      stream: _playSongBloc.currentDurationObservable,
+      stream: _audioPlayer.positionStream,
       builder: (context, snapshot) {
-        final currentDuration = snapshot.data ?? 0;
+        final currentDuration = snapshot.data ?? Duration.zero;
         return Container(
           margin: const EdgeInsets.symmetric(horizontal: Sizes.size20),
           child: ProgressBar(
-            progress: Duration(seconds: currentDuration),
+            progress: currentDuration,
             total: Duration(seconds: widget.song.duration ?? 0),
             thumbColor: AppColor.green06C149,
             baseBarColor: Colors.grey[200],
@@ -184,7 +213,8 @@ class _PlaySongScreenState extends State<PlaySongScreen>
               color: Colors.black,
             ),
             onSeek: (duration) {
-              _playSongBloc.currentDuration.sink.add(duration.inSeconds);
+              _seekTo(duration.inSeconds);
+              //  _playSongBloc.currentDuration.sink.add(duration.inSeconds);
             },
           ),
         );
@@ -193,40 +223,64 @@ class _PlaySongScreenState extends State<PlaySongScreen>
   }
 
   Widget _controllerActions() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        IconButton(
-          icon: const Icon(Icons.skip_previous_rounded),
-          iconSize: Sizes.size32,
-          color: Colors.black,
-          onPressed: () => {},
-        ),
-        IconButton(
-          icon: const Icon(Icons.replay_10_rounded),
-          iconSize: Sizes.size32,
-          color: Colors.black,
-          onPressed: () => {},
-        ),
-        IconButton(
-          icon: const Icon(Icons.pause_circle_filled_rounded),
-          iconSize: Sizes.size72,
-          color: AppColor.green06C149,
-          onPressed: () => {},
-        ),
-        IconButton(
-          icon: const Icon(Icons.forward_10_rounded),
-          iconSize: Sizes.size32,
-          color: Colors.black,
-          onPressed: () => {},
-        ),
-        IconButton(
-          icon: const Icon(Icons.skip_next_rounded),
-          iconSize: Sizes.size32,
-          color: Colors.black,
-          onPressed: () => {},
-        ),
-      ],
+    return StreamBuilder(
+      stream: _audioPlayer.playerStateStream,
+      builder: (context, snapshot) {
+        final playerState = snapshot.data;
+        final processingState = playerState?.processingState;
+        final isPlaying = playerState?.playing == true;
+
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.skip_previous_rounded),
+              iconSize: Sizes.size32,
+              color: Colors.black,
+              onPressed: () => {},
+            ),
+            IconButton(
+              icon: const Icon(Icons.replay_10_rounded),
+              iconSize: Sizes.size32,
+              color: Colors.black,
+              onPressed: () => {
+                _audioPlayer.seek(
+                    Duration(seconds: _audioPlayer.position.inSeconds - 10))
+              },
+            ),
+            IconButton(
+              icon: Icon(isPlaying
+                  ? Icons.pause_circle_filled_rounded
+                  : Icons.play_circle_fill_rounded),
+              iconSize: Sizes.size72,
+              color: AppColor.green06C149,
+              onPressed: () async {
+                if (isPlaying) {
+                  _pause();
+                } else {
+                  await _audioPlayer.seek(_audioPlayer.position);
+                  await _audioPlayer.play();
+                }
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.forward_10_rounded),
+              iconSize: Sizes.size32,
+              color: Colors.black,
+              onPressed: () => {
+                _audioPlayer.seek(
+                    Duration(seconds: _audioPlayer.position.inSeconds + 10))
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.skip_next_rounded),
+              iconSize: Sizes.size32,
+              color: Colors.black,
+              onPressed: () => {},
+            ),
+          ],
+        );
+      },
     );
   }
 

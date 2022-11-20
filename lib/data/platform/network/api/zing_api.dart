@@ -62,4 +62,14 @@ class ZingApi {
     String path = "/api/v2/page/get/playlist";
     return _getApiHasId(path, encodeId);
   }
+
+  static String apiSongStream(String encodeId) {
+    String path = "/api/v2/song/get/streaming";
+    return _getApiHasId(path, encodeId);
+  }
+
+  static String apiSongLyrics(String encodeId) {
+    String path = "/api/v2/song/get/lyric";
+    return _getApiHasId(path, encodeId);
+  }
 }

@@ -6,6 +6,7 @@ import 'package:musium/common/common.dart';
 import 'package:musium/data/platform/network/api/zing_api.dart';
 import 'package:musium/data/platform/network/response/detail_playlist_response.dart';
 import 'package:musium/data/platform/network/response/home_response.dart';
+import 'package:musium/data/platform/network/response/song_stream_response.dart';
 import 'package:musium/di/locator.dart';
 
 import '../response/error_response.dart';
@@ -105,6 +106,12 @@ class AppApi {
     final url = ZingApi.apiDetailPlaylist(encodeId);
     final response = await _get(url);
     return DetailPlaylistResponse.fromJson(response.data);
+  }
+
+  Future<SongStreamResponse> getSongStream(String encodeId) async {
+    final url = ZingApi.apiSongStream(encodeId);
+    final response = await _get(url);
+    return SongStreamResponse.fromJson(response.data);
   }
 
   Response _handelError(dynamic error, String url) {

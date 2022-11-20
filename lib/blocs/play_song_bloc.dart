@@ -10,23 +10,27 @@ class PlaySongBloc extends BaseBloc {
   final _zingRepository = locator<ZingRepository>();
 
   final _detailPlaylist = PublishSubject<DetailPlaylist>();
+  final _songStream = PublishSubject<String>();
   final currentDuration = PublishSubject<int>();
 
   Stream<int> get currentDurationObservable => currentDuration.stream;
+
   Stream<DetailPlaylist> get detailPlayListObservable => _detailPlaylist.stream;
 
-  void getDetailPlaylist(String encodeId) async {
+  Stream<String> get songStreamObservable => _songStream.stream;
+
+  void getSongData(String encodeId) async {
     runCatching(() async {
       loading.sink.add(true);
-      final detailResponse = await _zingRepository.getDetailPlaylist(encodeId);
-      final detail = detailResponse.data;
-      if (detail == null) {
+      final songStreamResponse = await _zingRepository.getSongStream(encodeId);
+      final stream = songStreamResponse.data?.s128 ?? "";
+      if (stream.isEmpty) {
         loading.sink.add(false);
         addError(ErrorResponse(message: "Data is not available"));
         return;
       }
       loading.sink.add(false);
-      _detailPlaylist.sink.add(detail);
+      _songStream.sink.add(stream);
     });
   }
 }
