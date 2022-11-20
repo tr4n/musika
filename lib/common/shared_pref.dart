@@ -3,6 +3,9 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreManager {
+  static const String keyCookie = "KEY_COOKIE";
+  static const String keyCookieTimestamp = "KEY_COOKIE_TIMESTAMP";
+
   SharedPreferences? _preferences;
 
   Future<SharedPreferences> get getPreferences async {
@@ -25,7 +28,7 @@ class SharedPreManager {
         final stringFromMap = jsonEncode(value);
         return await sp.setString(key, stringFromMap);
       default:
-        throw "SharedPreManager.write<T>: missing T";
+        throw "c.write<T>: missing T";
     }
   }
 

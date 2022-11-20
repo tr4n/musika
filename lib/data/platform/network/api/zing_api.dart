@@ -53,7 +53,7 @@ class ZingApi {
   static String apiHome() {
     String path = "/api/v2/page/get/home";
     final ctime = DateTime.now().millisecondsSinceEpoch;
-    final count = 10;
+    const count = 10;
     final sig = _hashParamHome(path, ctime, count);
     return "$zingMp3Url$path?page=1&segmentId=-1&count=$count&ctime=$ctime&version=$_version&sig=$sig&apiKey=$_apiKey";
   }

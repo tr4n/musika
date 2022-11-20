@@ -3,7 +3,7 @@ import 'package:musium/data/platform/network/api/api.dart';
 import '../platform/network/response/responses.dart';
 
 class ZingRepository {
-  final ZingMp3Api _api;
+  final AppApi _api;
 
   ZingRepository(this._api);
 

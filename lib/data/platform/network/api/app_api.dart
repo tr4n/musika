@@ -2,22 +2,26 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
+import 'package:musium/common/common.dart';
 import 'package:musium/data/platform/network/api/zing_api.dart';
 import 'package:musium/data/platform/network/response/detail_playlist_response.dart';
 import 'package:musium/data/platform/network/response/home_response.dart';
+import 'package:musium/di/locator.dart';
 
 import '../response/error_response.dart';
 
-class ZingMp3Api {
-  final int _timeOut = 1000000; //10s
+class AppApi {
+  final int _timeOut = 10000; //10s
   late Dio _dio;
+  late final sharedPrefs = locator.get<SharedPreManager>();
   String? cookie;
+  int? cookieTimestamp;
 
-  ZingMp3Api() {
+  AppApi() {
     BaseOptions options =
         BaseOptions(connectTimeout: _timeOut, receiveTimeout: _timeOut);
     Map<String, dynamic> headers = {
-      'content-type': 'text/html;UTF-8;charset=utf-8'
+      // 'Content-Type': 'application/json;text/html;UTF-8;charset=utf-8;application/x-www-form-urlencoded'
     };
     options.headers = headers;
     _dio = Dio(options)
@@ -26,10 +30,33 @@ class ZingMp3Api {
 
   Future<String?> _getCookie(String url) async {
     try {
-      if (cookie == null) {
-        final response = await _dio.get(url);
-        final newCookie = response.headers[HttpHeaders.setCookieHeader];
-        cookie = newCookie?.firstOrNull;
+      // var cookie = await sharedPrefs.read<String>(SharedPreManager.keyCookie);
+      // var cookieTimestamp =
+      //     await sharedPrefs.read<int>(SharedPreManager.keyCookieTimestamp);
+
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final shouldRenewCookie = cookie == null ||
+          cookieTimestamp == null ||
+          timestamp - (cookieTimestamp ?? 0) > Duration.millisecondsPerDay;
+      if (!shouldRenewCookie) {
+        return cookie;
+      }
+
+      final response = await _dio.get(url);
+      final newCookie =
+          response.headers[HttpHeaders.setCookieHeader]?.firstOrNull;
+      if (newCookie != null) {
+        // await sharedPrefs.write(
+        //   SharedPreManager.keyCookie,
+        //   newCookie,
+        // );
+        // await sharedPrefs.write(
+        //   SharedPreManager.keyCookieTimestamp,
+        //   timestamp,
+        // );
+        cookie = newCookie;
+        cookieTimestamp = timestamp;
+        return newCookie;
       }
       return cookie;
     } catch (e) {
@@ -40,9 +67,10 @@ class ZingMp3Api {
   Future<Response<T>> _get<T>(String url,
       {Map<String, dynamic> params = const {}}) async {
     final cookie = await _getCookie(url);
-    final options = Options(headers: {
-      "Cookie": cookie ?? "",
-    }, responseType: ResponseType.json);
+    final options = Options(
+      headers: {"Cookie": cookie ?? ""},
+      responseType: ResponseType.json,
+    );
     return await _dio.get(
       url,
       queryParameters: params,
