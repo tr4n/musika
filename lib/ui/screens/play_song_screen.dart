@@ -3,6 +3,8 @@ import 'package:just_audio/just_audio.dart';
 import 'package:musium/blocs/play_song_bloc.dart';
 import 'package:musium/data/model/models.dart';
 import 'package:musium/extension/context_ext.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:sane/collection.dart';
 
 import '../../resources/resources.dart';
 import '../components/components.dart';
@@ -193,19 +195,34 @@ class _PlaySongScreenState extends State<PlaySongScreen>
     );
   }
 
+  /// Collects the data useful for displaying in a seek bar, using a handy
+  /// feature of rx_dart to combine the 3 streams of interest into one.
+  Stream<Triple<Duration, Duration, Duration>> get _positionDataStream =>
+      Rx.combineLatest3<Duration, Duration, Duration?,
+              Triple<Duration, Duration, Duration>>(
+          _audioPlayer.positionStream,
+          _audioPlayer.bufferedPositionStream,
+          _audioPlayer.durationStream,
+          (position, bufferedPosition, duration) =>
+              Triple(position, bufferedPosition, duration ?? Duration.zero));
+
   Widget _seekBar() {
     return StreamBuilder(
-      stream: _audioPlayer.positionStream,
+      stream: _positionDataStream,
       builder: (context, snapshot) {
-        final currentDuration = snapshot.data ?? Duration.zero;
+        final position = snapshot.data?.left ?? Duration.zero;
+        final bufferedPosition = snapshot.data?.middle ?? Duration.zero;
+        final total = snapshot.data?.right ?? Duration.zero;
         return Container(
           margin: const EdgeInsets.symmetric(horizontal: Sizes.size20),
           child: ProgressBar(
-            progress: currentDuration,
-            total: Duration(seconds: widget.song.duration ?? 0),
+            progress: position,
+            buffered: bufferedPosition,
+            total: total,
             thumbColor: AppColor.green06C149,
             baseBarColor: Colors.grey[200],
-            progressBarColor: AppColor.green47e77e,
+            progressBarColor: Colors.green[500],
+            bufferedBarColor: Colors.green[100],
             barHeight: Sizes.size8,
             timeLabelPadding: Sizes.size16,
             timeLabelTextStyle: const TextStyle(
