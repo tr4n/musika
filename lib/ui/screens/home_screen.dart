@@ -8,6 +8,7 @@ import 'package:musium/ui/components/item_banners.dart';
 import 'package:musium/ui/components/item_mixes.dart';
 import 'package:musium/ui/components/item_new_releases.dart';
 import 'package:musium/ui/components/item_playlists.dart';
+import 'package:musium/ui/screens/play_song_screen.dart';
 import 'package:musium/ui/screens/playlist_screen.dart';
 
 import '../../resources/resources.dart';
@@ -26,6 +27,15 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => PlaylistScreen(playlist)),
+    );
+  }
+
+  _onNewReleaseTap(NewRelease newRelease) {
+    final id = newRelease.encodeId;
+    if (id == null) return;
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => PlaySongScreen(id)),
     );
   }
 
@@ -142,7 +152,10 @@ class _HomeScreenState extends State<HomeScreen> {
           return const SizedBox();
         }
         return Column(
-          children: newReleases.map((e) => ItemNewReleases(e)).toList(),
+          children: newReleases
+              .map((e) =>
+                  ItemNewReleases(newReleases: e, onTapItem: _onNewReleaseTap))
+              .toList(),
         );
       },
     );

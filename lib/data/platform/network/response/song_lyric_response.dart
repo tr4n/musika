@@ -1,9 +1,10 @@
+import 'package:http/http.dart';
 import 'package:musium/data/model/models.dart';
 
 import '../../../../common/common.dart';
 import '../../../../common/type/types.dart';
 
-class HomeResponse {
+class HomeResponse extends BaseResponse<>{
   int? err;
   String? msg;
   HomeResponseData? data;

@@ -10,9 +10,9 @@ import '../../resources/resources.dart';
 import '../components/components.dart';
 
 class PlaySongScreen extends StatefulWidget {
-  final Song song;
+  final String songId;
 
-  const PlaySongScreen(this.song, {super.key});
+  const PlaySongScreen(this.songId, {super.key});
 
   @override
   State<PlaySongScreen> createState() => _PlaySongScreenState();
@@ -23,6 +23,7 @@ class _PlaySongScreenState extends State<PlaySongScreen>
   final _playSongBloc = PlaySongBloc();
   final _audioPlayer = AudioPlayer();
   var _streamUrl = "";
+  var _song = Song();
 
   void _onBackPress() {
     Navigator.pop(context);
@@ -55,7 +56,7 @@ class _PlaySongScreenState extends State<PlaySongScreen>
 
   @override
   Widget build(BuildContext context) {
-    _playSongBloc.getSongData(widget.song.encodeId ?? "");
+    _playSongBloc.getSongData(widget.songId);
     _observeData();
     return Scaffold(
       appBar: AppBar(
@@ -102,10 +103,12 @@ class _PlaySongScreenState extends State<PlaySongScreen>
 
   Widget _playSongBody() {
     return StreamBuilder(
-      stream: _playSongBloc.songStreamObservable,
+      stream: _playSongBloc.songInfoObservable,
       builder: (context, snapshot) {
-        _streamUrl = snapshot.data ?? "";
-        if (_streamUrl.isEmpty) {
+        final songInfo = snapshot.data;
+        _streamUrl = songInfo?.stream ?? "";
+        _song = songInfo?.song ?? Song();
+        if (songInfo == null) {
           return Center(
               child: CircularProgressIndicator(color: AppColor.green06C149));
         }
@@ -160,7 +163,7 @@ class _PlaySongScreenState extends State<PlaySongScreen>
           ClipRRect(
             borderRadius: BorderRadius.circular(Sizes.size200),
             child: Image.network(
-              widget.song.thumbnailM ??
+              _song.thumbnailM ??
                   "https://api.lorem.space/image/album?w=250&h=250",
               width: Sizes.size250,
               height: Sizes.size250,
@@ -175,7 +178,7 @@ class _PlaySongScreenState extends State<PlaySongScreen>
               color: Colors.black,
             ),
             child: Text(
-              widget.song.title ?? "",
+              _song.title ?? "",
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -186,7 +189,7 @@ class _PlaySongScreenState extends State<PlaySongScreen>
               color: Colors.black,
             ),
             child: Text(
-              widget.song.artistsNames ?? "",
+              _song.artistsNames ?? "",
               overflow: TextOverflow.ellipsis,
             ),
           ),

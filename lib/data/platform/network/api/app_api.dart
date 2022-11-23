@@ -10,6 +10,7 @@ import 'package:musium/data/platform/network/response/song_stream_response.dart'
 import 'package:musium/di/locator.dart';
 
 import '../response/error_response.dart';
+import '../response/responses.dart';
 
 class AppApi {
   final int _timeOut = 10000; //10s
@@ -108,8 +109,20 @@ class AppApi {
     return DetailPlaylistResponse.fromJson(response.data);
   }
 
+  Future<SongInfoResponse> getSongInfo(String encodeId) async {
+    final url = ZingApi.apiSongInfo(encodeId);
+    final response = await _get(url);
+    return SongInfoResponse.fromJson(response.data);
+  }
+
   Future<SongStreamResponse> getSongStream(String encodeId) async {
     final url = ZingApi.apiSongStream(encodeId);
+    final response = await _get(url);
+    return SongStreamResponse.fromJson(response.data);
+  }
+
+  Future<dynamic> getSongLyric(String encodeId) async {
+    final url = ZingApi.apiSongLyric(encodeId);
     final response = await _get(url);
     return SongStreamResponse.fromJson(response.data);
   }

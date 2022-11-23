@@ -26,8 +26,11 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
   }
 
   void _onPlaySong(Song song) {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => PlaySongScreen(song)));
+    final songId = song.encodeId;
+    if (songId != null) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => PlaySongScreen(songId)));
+    }
   }
 
   @override
@@ -246,7 +249,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
     final songs = detailPlaylist.songs;
     return songs != null
         ? SongList(
-      title: "Songs",
+            title: "Songs",
             songs: songs,
             onTapSeeAll: () {},
             onPlaySong: _onPlaySong,

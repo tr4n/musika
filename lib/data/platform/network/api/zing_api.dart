@@ -63,13 +63,18 @@ class ZingApi {
     return _getApiHasId(path, encodeId);
   }
 
+  static String apiSongInfo(String encodeId) {
+    String path = "/api/v2/song/get/info";
+    return _getApiHasId(path, encodeId);
+  }
+
   static String apiSongStream(String encodeId) {
     String path = "/api/v2/song/get/streaming";
     return _getApiHasId(path, encodeId);
   }
 
-  static String apiSongLyrics(String encodeId) {
-    String path = "/api/v2/song/get/lyric";
+  static String apiSongLyric(String encodeId) {
+    String path = "/api/v2/lyric/get/lyric";
     return _getApiHasId(path, encodeId);
   }
 }

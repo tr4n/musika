@@ -1,31 +1,17 @@
 import 'package:musium/data/model/models.dart';
+import 'package:musium/data/platform/network/response/base_response.dart';
 
 import '../../../../common/common.dart';
 import '../../../../common/type/types.dart';
 
-class HomeResponse {
-  int? err;
-  String? msg;
-  HomeResponseData? data;
-
-  HomeResponse({this.err, this.msg});
-
-  HomeResponse.fromJson(Map<String, dynamic> json) {
-    err = json['err'];
-    msg = json['msg'];
-    data = json["data"] != null ? HomeResponseData.fromJson(json["data"]) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['err'] = err;
-    data['msg'] = msg;
-    data["data"] = this.data?.toJson();
-    return data;
+class HomeResponse extends BaseResponse<HomeResponseData> {
+  HomeResponse.fromJson(Map<String, dynamic> json) : super.fromJson(json) {
+    data =
+        json["data"] != null ? HomeResponseData.fromJson(json["data"]) : null;
   }
 }
 
-class HomeResponseData {
+class HomeResponseData implements ToJsonAble {
   bool? hasMore;
   int? total;
   List<HomeSectionItem>? items;
@@ -59,6 +45,7 @@ class HomeResponseData {
     total = json['total'];
   }
 
+  @override
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     if (items != null) {
