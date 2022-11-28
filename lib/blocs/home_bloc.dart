@@ -56,6 +56,7 @@ class HomeBloc {
         newReleasesList.add(item);
       }
     }
+    print("artists: ${artistsList}");
     _bannersSubject.sink.add(bannersList);
     _artistsSubject.sink.add(artistsList);
     _newReleasesSubject.sink.add(newReleasesList);

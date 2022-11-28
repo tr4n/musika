@@ -6,8 +6,9 @@ import '../../resources/resources.dart';
 
 class ItemNewReleases extends StatelessWidget {
   final NewReleases newReleases;
+  Function(NewRelease)? onTapItem;
 
-  const ItemNewReleases(this.newReleases, {super.key});
+  ItemNewReleases({required this.newReleases, this.onTapItem, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +53,12 @@ class ItemNewReleases extends StatelessWidget {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: items.map((e) => _item(e)).toList(),
+              children: items
+                  .map((e) => InkWell(
+                        child: _item(e),
+                        onTap: () => onTapItem?.call(e),
+                      ))
+                  .toList(),
             ),
           ),
         ],

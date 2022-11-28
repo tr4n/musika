@@ -6,8 +6,9 @@ import '../../resources/resources.dart';
 
 class ItemBanners extends StatelessWidget {
   final Banners banners;
+  Function(MusicBanner)? onTapItem;
 
-  const ItemBanners(this.banners, {super.key});
+  ItemBanners({required this.banners, this.onTapItem, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,18 +25,21 @@ class ItemBanners extends StatelessWidget {
       items: items.map((banner) {
         return Builder(
           builder: (BuildContext context) {
-            return Container(
-              width: MediaQuery.of(context).size.width,
-              margin: const EdgeInsets.symmetric(horizontal: Sizes.size8),
-              child: banner.cover != null
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(Sizes.size8),
-                      child: Image.network(
-                        banner.banner ?? "",
-                        fit: BoxFit.cover,
-                      ),
-                    )
-                  : null,
+            return InkWell(
+              onTap: () => onTapItem?.call(banner),
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                margin: const EdgeInsets.symmetric(horizontal: Sizes.size8),
+                child: banner.cover != null
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(Sizes.size8),
+                        child: Image.network(
+                          banner.banner ?? "",
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : null,
+              ),
             );
           },
         );

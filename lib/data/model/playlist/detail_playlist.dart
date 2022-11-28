@@ -1,7 +1,9 @@
+import 'package:musium/data/platform/network/response/base_response.dart';
+
 import '../../../extension/collection_ext.dart';
 import '../models.dart';
 
-class DetailPlaylist {
+class DetailPlaylist implements ToJsonAble {
   String? encodeId;
   String? title;
   String? thumbnail;
@@ -116,6 +118,7 @@ class DetailPlaylist {
     liked = json['liked'];
   }
 
+  @override
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['encodeId'] = encodeId;

@@ -23,8 +23,9 @@ class ItemMixes extends StatelessWidget {
   ];
 
   final Mixes mixes;
+  Function(Mix)? onTapItem;
 
-  ItemMixes(this.mixes, {super.key});
+  ItemMixes({required this.mixes, this.onTapItem, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +60,9 @@ class ItemMixes extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: mixesItems
-                  .mapIndexed((index, mix) => _item(index, mix))
+                  .mapIndexed((index, mix) => InkWell(
+                      onTap: () => onTapItem?.call(mix),
+                      child: _item(index, mix)))
                   .toList(),
             ),
           ),

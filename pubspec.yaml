@@ -54,6 +54,7 @@ dependencies:
   just_audio: ^0.9.30
   just_audio_libwinmedia: ^0.0.4+1
   sane: ^1.0.1
+  async: ^2.9.0
 
 dev_dependencies:
   flutter_test:
