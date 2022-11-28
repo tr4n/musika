@@ -7,8 +7,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:musium/main.dart';
 import 'package:musium/ui/screens/screens.dart';
 
 void main() {

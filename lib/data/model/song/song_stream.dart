@@ -1,8 +1,10 @@
+import 'package:musium/data/platform/network/response/base_response.dart';
+
 import '../../../extension/collection_ext.dart';
 import '../album/album.dart';
 import '../artist/artist.dart';
 
-class SongStream {
+class SongStream implements ToJsonAble {
   String? s128;
   String? s320;
 
@@ -13,6 +15,7 @@ class SongStream {
     s320 = json['320'];
   }
 
+  @override
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['128'] = s128;

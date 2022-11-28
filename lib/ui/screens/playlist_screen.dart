@@ -9,9 +9,9 @@ import 'package:musium/ui/screens/play_song_screen.dart';
 import '../../resources/resources.dart';
 
 class PlaylistScreen extends StatefulWidget {
-  final Playlist playlist;
+  final String playlistId;
 
-  const PlaylistScreen(this.playlist, {super.key});
+  const PlaylistScreen(this.playlistId, {super.key});
 
   @override
   State<PlaylistScreen> createState() => _PlaylistScreenState();
@@ -19,6 +19,8 @@ class PlaylistScreen extends StatefulWidget {
 
 class _PlaylistScreenState extends State<PlaylistScreen> {
   final _playlistBloc = PlaylistBloc();
+  DetailPlaylist _playlist = DetailPlaylist();
+
   AlertDialog? _loadingDialog;
 
   void _onBackPress() {
@@ -35,7 +37,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _playlistBloc.getDetailPlaylist(widget.playlist.encodeId ?? "");
+    _playlistBloc.getDetailPlaylist(widget.playlistId);
     _observeData();
     return Scaffold(
       appBar: AppBar(
@@ -105,6 +107,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
           return Center(
               child: CircularProgressIndicator(color: AppColor.green06C149));
         }
+        _playlist = detailPlaylist;
         return SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Column(
@@ -140,7 +143,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
           ClipRRect(
             borderRadius: BorderRadius.circular(Sizes.size32),
             child: Image.network(
-              widget.playlist.thumbnailM ??
+              _playlist.thumbnailM ??
                   "https://api.lorem.space/image/album?w=250&h=250",
               width: Sizes.size200,
               height: Sizes.size200,
@@ -154,7 +157,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
               fontWeight: FontWeight.w700,
               color: Colors.black,
             ),
-            child: Text(widget.playlist.title ?? ""),
+            child: Text(_playlist.title ?? ""),
           ),
           const SizedBox(height: Sizes.size16),
           DefaultTextStyle(
@@ -162,7 +165,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
               fontSize: Sizes.size18,
               color: Colors.black,
             ),
-            child: Text(widget.playlist.artistsNames ?? ""),
+            child: Text(_playlist.artistsNames ?? ""),
           ),
           const SizedBox(height: Sizes.size12),
           DefaultTextStyle(
@@ -172,7 +175,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
               color: Colors.black,
             ),
             child: Text(
-              widget.playlist.sortDescription ?? "",
+              _playlist.sortDescription ?? "",
               textAlign: TextAlign.center,
             ),
           ),

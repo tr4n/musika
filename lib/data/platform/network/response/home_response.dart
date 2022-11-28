@@ -1,10 +1,10 @@
 import 'package:musium/data/model/models.dart';
-import 'package:musium/data/platform/network/response/base_response.dart';
+import 'package:musium/data/platform/network/response/responses.dart';
 
 import '../../../../common/common.dart';
 import '../../../../common/type/types.dart';
 
-class HomeResponse extends BaseResponse<HomeResponseData> {
+class HomeResponse extends ZingResponse<HomeResponseData> {
   HomeResponse.fromJson(Map<String, dynamic> json) : super.fromJson(json) {
     data =
         json["data"] != null ? HomeResponseData.fromJson(json["data"]) : null;
@@ -21,6 +21,7 @@ class HomeResponseData implements ToJsonAble {
   HomeResponseData.fromJson(Map<String, dynamic> json) {
     items = cast<List<dynamic>>(json["items"])?.map((itemJson) {
       final item = HomeSectionItem.fromJson(itemJson);
+      print("section type: ${item.sectionType}");
       if (item.sectionType == SectionType.newRelease.value) {
         return NewReleases.fromJson(itemJson);
       }

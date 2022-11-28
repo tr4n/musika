@@ -1,8 +1,10 @@
+import 'package:musium/data/platform/network/response/base_response.dart';
+
 import '../../../extension/collection_ext.dart';
 import '../album/album.dart';
 import '../artist/artist.dart';
 
-class Song {
+class Song implements ToJsonAble {
   String? encodeId;
   String? title;
   String? alias;
@@ -85,6 +87,7 @@ class Song {
     hasLyric = json['hasLyric'];
   }
 
+  @override
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['encodeId'] = encodeId;

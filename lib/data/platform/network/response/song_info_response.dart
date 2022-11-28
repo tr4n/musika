@@ -1,23 +1,8 @@
 import 'package:musium/data/model/models.dart';
+import 'package:musium/data/platform/network/response/base_response.dart';
 
-class SongInfoResponse {
-  int? err;
-  String? msg;
-  Song? data;
-
-  SongInfoResponse({this.err, this.msg});
-
-  SongInfoResponse.fromJson(Map<String, dynamic> json) {
-    err = json['err'];
-    msg = json['msg'];
+class SongInfoResponse extends ZingResponse<Song> {
+  SongInfoResponse.fromJson(Map<String, dynamic> json) : super.fromJson(json) {
     data = json["data"] != null ? Song.fromJson(json["data"]) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['err'] = err;
-    data['msg'] = msg;
-    data["data"] = this.data?.toJson();
-    return data;
   }
 }

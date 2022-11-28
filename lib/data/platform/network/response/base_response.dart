@@ -1,9 +1,9 @@
-class BaseResponse<T extends ToJsonAble> {
+class ZingResponse<T extends ToJsonAble> {
   int? err;
   String? msg;
   T? data;
 
-  BaseResponse.fromJson(Map<String, dynamic> json) {
+  ZingResponse.fromJson(Map<String, dynamic> json) {
     err = json['err'];
     msg = json['msg'];
   }
