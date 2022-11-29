@@ -31,6 +31,22 @@ class ZingApi {
     );
   }
 
+  static String _hashCategoryMV(
+      String path, String id, String type, int ctime) {
+    return _getHmac512(
+      path + _getHash256("ctime=${ctime}id=${id}type=${type}version=$_version"),
+      _secretKey,
+    );
+  }
+
+  static String _hashListMV(String path, String id, String type, String page,
+      String count, int ctime) {
+    return _getHmac512(
+      path + _getHash256("count=${count}ctime=${ctime}id=${id}page=${page}type=${type}version=$_version"),
+      _secretKey,
+    );
+  }
+
   static String _hashParamHome(String path, int ctime, int count) {
     return _getHmac512(
       path + _getHash256("count=${count}ctime=${ctime}page=1version=$_version"),
@@ -76,5 +92,31 @@ class ZingApi {
   static String apiSongLyric(String encodeId) {
     String path = "/api/v2/lyric/get/lyric";
     return _getApiHasId(path, encodeId);
+  }
+
+  // Chart
+  static String apiNewReleaseChart() {
+    String path = "/api/v2/page/get/newrelease-chart";
+    return _getApiNoId(path);
+  }
+
+  static String apiHomeChart() {
+    String path = "/api/v2/page/get/chart-home";
+    return _getApiNoId(path);
+  }
+
+  static String apiTop100() {
+    String path = "/api/v2/page/get/top-100";
+    return _getApiNoId(path);
+  }
+
+  static String apiListArtistSong(String artistId, String page, String count) {
+
+    const type = "artist";
+    final ctime = DateTime.now().millisecondsSinceEpoch ;
+    const sort = "new";
+    const sectionId = "aSong";
+    String path = "/api/v2/song/get/list";
+    return _hashListMV(path, artistId, type, page, count, ctime);
   }
 }

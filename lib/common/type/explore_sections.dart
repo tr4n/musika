@@ -21,5 +21,5 @@ enum ExploreSection {
       {required this.id,
       required this.title,
       required this.color,
-      this.imagePath = "assets/icons/ic_musium_logo.png"});
+      this.imagePath = "assets/icons/ic_logo.png"});
 }

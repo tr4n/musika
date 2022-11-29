@@ -54,9 +54,9 @@ class ItemExplore extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(Sizes.size12),
               child: Image.network(
-                "https://api.lorem.space/image/album?w=150&h=${150 + section.id}",
-                width: Sizes.size90,
-                height: Sizes.size90,
+                "https://api.lorem.space/image/album?w=90&h=${90 + section.id}",
+                width: Sizes.size72,
+                height: Sizes.size72,
                 fit: BoxFit.cover,
               ),
             ),
