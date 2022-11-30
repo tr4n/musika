@@ -17,18 +17,26 @@ class ZingApi {
     return hmac.convert(utf8.encode(string)).toString();
   }
 
-  static String _hashParam(String path, String id, int ctime) {
-    return _getHmac512(
-      path + _getHash256("ctime=${ctime}id=${id}version=$_version"),
-      _secretKey,
-    );
+  static String _getPathQueries(String endPoint, Map<String, dynamic> params) {
+    final buffer = StringBuffer(zingMp3Url);
+    params.addAll({
+      "apiKey": _apiKey,
+      "version": _version,
+    });
+    final queries = params.keys.map((key) => "$key=${params[key]}").join("&");
+    buffer.write(endPoint);
+    if (queries.isNotEmpty) {
+      buffer.write("?$queries");
+    }
+    return buffer.toString();
   }
 
-  static String _hashParamNoId(String path, int ctime) {
-    return _getHmac512(
-      path + _getHash256("ctime=${ctime}version=$_version"),
-      _secretKey,
-    );
+  static String _hashParams(String endPoint, Map<String, dynamic> params) {
+    params.addAll({"version": _version});
+    final string = params.keys.map((key) => "$key=${params[key]}").join("");
+    print(string);
+    final hash256 = _getHash256(string);
+    return _getHmac512(endPoint + hash256, _secretKey);
   }
 
   static String _hashCategoryMV(
@@ -39,84 +47,119 @@ class ZingApi {
     );
   }
 
-  static String _hashListMV(String path, String id, String type, String page,
-      String count, int ctime) {
-    return _getHmac512(
-      path + _getHash256("count=${count}ctime=${ctime}id=${id}page=${page}type=${type}version=$_version"),
-      _secretKey,
-    );
-  }
-
-  static String _hashParamHome(String path, int ctime, int count) {
-    return _getHmac512(
-      path + _getHash256("count=${count}ctime=${ctime}page=1version=$_version"),
-      _secretKey,
-    );
-  }
-
-  static String _getApiHasId(String path, String id) {
-    final ctime = DateTime.now().millisecondsSinceEpoch ~/ 1000;
-    final sig = _hashParam(path, id, ctime);
-    return "$zingMp3Url$path?id=$id&ctime=$ctime&version=$_version&sig=$sig&apiKey=$_apiKey";
-  }
-
-  static String _getApiNoId(String path) {
-    final ctime = DateTime.now().millisecondsSinceEpoch ~/ 1000;
-    final sig = _hashParamNoId(path, ctime);
-    return "$zingMp3Url$path?ctime=$ctime&version=$_version&sig=$sig&apiKey=$_apiKey";
-  }
-
   static String apiHome() {
-    String path = "/api/v2/page/get/home";
+    String endPoint = "/api/v2/page/get/home";
     final ctime = DateTime.now().millisecondsSinceEpoch;
     const count = 10;
-    final sig = _hashParamHome(path, ctime, count);
-    return "$zingMp3Url$path?page=1&segmentId=-1&count=$count&ctime=$ctime&version=$_version&sig=$sig&apiKey=$_apiKey";
+    const page = 1;
+    final sig =
+        _hashParams(endPoint, {"count": count, "ctime": ctime, "page": page});
+    return _getPathQueries(endPoint, {
+      "page": page,
+      "segmentId": -1,
+      "count": count,
+      "ctime": ctime,
+      "sig": sig,
+    });
   }
 
   static String apiDetailPlaylist(String encodeId) {
-    String path = "/api/v2/page/get/playlist";
-    return _getApiHasId(path, encodeId);
+    String endPoint = "/api/v2/page/get/playlist";
+    final ctime = DateTime.now().millisecondsSinceEpoch;
+    final sig = _hashParams(endPoint, {"ctime": ctime, "id": encodeId});
+    return _getPathQueries(
+        endPoint, {"id": encodeId, "ctime": ctime, "sig": sig});
   }
 
   static String apiSongInfo(String encodeId) {
-    String path = "/api/v2/song/get/info";
-    return _getApiHasId(path, encodeId);
+    String endPoint = "/api/v2/song/get/info";
+    final ctime = DateTime.now().millisecondsSinceEpoch;
+    final sig = _hashParams(endPoint, {"ctime": ctime, "id": encodeId});
+    return _getPathQueries(
+        endPoint, {"id": encodeId, "ctime": ctime, "sig": sig});
   }
 
   static String apiSongStream(String encodeId) {
-    String path = "/api/v2/song/get/streaming";
-    return _getApiHasId(path, encodeId);
+    String endPoint = "/api/v2/song/get/streaming";
+    final ctime = DateTime.now().millisecondsSinceEpoch;
+    final sig = _hashParams(endPoint, {"ctime": ctime, "id": encodeId});
+    return _getPathQueries(
+        endPoint, {"id": encodeId, "ctime": ctime, "sig": sig});
   }
 
   static String apiSongLyric(String encodeId) {
-    String path = "/api/v2/lyric/get/lyric";
-    return _getApiHasId(path, encodeId);
+    String endPoint = "/api/v2/lyric/get/lyric";
+    final ctime = DateTime.now().millisecondsSinceEpoch;
+    final sig = _hashParams(endPoint, {"ctime": ctime, "id": encodeId});
+    return _getPathQueries(
+        endPoint, {"id": encodeId, "ctime": ctime, "sig": sig});
+  }
+
+  static String apiSongRecommend(String encodeId) {
+    String endPoint = "/api/v2/recommend/get/songs";
+    final ctime = DateTime.now().millisecondsSinceEpoch;
+    final sig = _hashParams(endPoint, {"ctime": ctime, "id": encodeId});
+    return _getPathQueries(
+        endPoint, {"id": encodeId, "ctime": ctime, "sig": sig});
+  }
+
+  static String apiSectionPlaylist(String encodeId) {
+    String endPoint = "/api/v2/playlist/get/section-bottom";
+    final ctime = DateTime.now().millisecondsSinceEpoch;
+    final sig = _hashParams(endPoint, {"ctime": ctime, "id": encodeId});
+    return _getPathQueries(
+        endPoint, {"id": encodeId, "ctime": ctime, "sig": sig});
+  }
+
+  static String apiDetailArtist(String encodeId) {
+    String endPoint = "/api/v2/artist/getDetail";
+    final ctime = DateTime.now().millisecondsSinceEpoch;
+    final sig = _hashParams(endPoint, {"ctime": ctime, "id": encodeId});
+    return _getPathQueries(
+        endPoint, {"id": encodeId, "ctime": ctime, "sig": sig});
   }
 
   // Chart
   static String apiNewReleaseChart() {
-    String path = "/api/v2/page/get/newrelease-chart";
-    return _getApiNoId(path);
+    String endPoint = "/api/v2/page/get/newrelease-chart";
+    final ctime = DateTime.now().millisecondsSinceEpoch;
+    final sig = _hashParams(endPoint, {"ctime": ctime});
+    return _getPathQueries(endPoint, {"ctime": ctime, "sig": sig});
   }
 
   static String apiHomeChart() {
-    String path = "/api/v2/page/get/chart-home";
-    return _getApiNoId(path);
+    String endPoint = "/api/v2/page/get/chart-home";
+    final ctime = DateTime.now().millisecondsSinceEpoch;
+    final sig = _hashParams(endPoint, {"ctime": ctime});
+    return _getPathQueries(endPoint, {"ctime": ctime, "sig": sig});
   }
 
   static String apiTop100() {
-    String path = "/api/v2/page/get/top-100";
-    return _getApiNoId(path);
+    String endPoint = "/api/v2/page/get/top-100";
+    final ctime = DateTime.now().millisecondsSinceEpoch;
+    final sig = _hashParams(endPoint, {"ctime": ctime});
+    return _getPathQueries(endPoint, {"ctime": ctime, "sig": sig});
   }
 
-  static String apiListArtistSong(String artistId, String page, String count) {
-
+  static String apiArtistSongList(String artistId, int page, int count) {
     const type = "artist";
-    final ctime = DateTime.now().millisecondsSinceEpoch ;
-    const sort = "new";
-    const sectionId = "aSong";
-    String path = "/api/v2/song/get/list";
-    return _hashListMV(path, artistId, type, page, count, ctime);
+    final ctime = DateTime.now().millisecondsSinceEpoch;
+    String endPoint = "/api/v2/song/get/list";
+    final sig = _hashParams(endPoint, {
+      "count": count,
+      "ctime": ctime,
+      "id": artistId,
+      "page": page,
+      "type": type,
+    });
+    return _getPathQueries(endPoint, {
+      "id": artistId,
+      "type": type,
+      "page": page,
+      "count": count,
+      "sort": "new",
+      "sectionId": "aSong",
+      "sig": sig,
+    });
   }
 }

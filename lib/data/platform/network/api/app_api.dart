@@ -127,6 +127,25 @@ class AppApi {
     return SongStreamResponse.fromJson(response.data);
   }
 
+  Future<dynamic> getSectionPlaylist(String encodeId) async {
+    final url = ZingApi.apiSectionPlaylist(encodeId);
+    final response = await _get(url);
+    return SongStreamResponse.fromJson(response.data);
+  }
+
+  Future<dynamic> getDetailArtist(String encodeId) async {
+    final url = ZingApi.apiDetailPlaylist(encodeId);
+    final response = await _get(url);
+    return SongStreamResponse.fromJson(response.data);
+  }
+
+  Future<ArtistSongListResponse> getArtistSongList(
+      String artistId, int page, int count) async {
+    final url = ZingApi.apiArtistSongList(artistId, page, count);
+    final response = await _get(url);
+    return ArtistSongListResponse.fromJson(response.data);
+  }
+
   Response _handelError(dynamic error, String url) {
     try {
       if (error is DioError) {

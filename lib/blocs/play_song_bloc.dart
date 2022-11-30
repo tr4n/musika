@@ -1,5 +1,5 @@
+import 'package:collection/collection.dart';
 import 'package:musium/base/base.dart';
-import 'package:musium/data/model/song/song_info.dart';
 import 'package:musium/data/platform/network/response/error_response.dart';
 import 'package:musium/data/repository/repositories.dart';
 import 'package:musium/di/locator.dart';
@@ -27,6 +27,9 @@ class PlaySongBloc extends BaseBloc {
       final songStreamResponse = await _zingRepository.getSongStream(encodeId);
       final songInfoResponse = await _zingRepository.getSongInfo(encodeId);
       final lyricResponse = await _zingRepository.getSongLyric(encodeId);
+      final artistId = songInfoResponse.data?.artists?.firstOrNull?.id;
+      final artistSongs =
+          await _zingRepository.getArtistSongList("IWZAEAC0", 1, 20);
 
       final stream = songStreamResponse.data?.s128 ?? "";
       final song = songInfoResponse.data;

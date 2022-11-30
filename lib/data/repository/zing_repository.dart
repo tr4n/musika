@@ -27,4 +27,17 @@ class ZingRepository {
   Future<dynamic> getSongLyric(String encodeId) async {
     return _api.getSongLyric(encodeId);
   }
+
+  Future<dynamic> getSectionPlaylist(String encodeId) async {
+    return _api.getSectionPlaylist(encodeId);
+  }
+
+  Future<dynamic> getDetailArtist(String encodeId) async {
+    return _api.getDetailArtist(encodeId);
+  }
+
+  Future<dynamic> getArtistSongList(
+      String artistId, int page, int count) async {
+    return _api.getArtistSongList(artistId, page, count);
+  }
 }
