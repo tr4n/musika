@@ -6,8 +6,10 @@ import '../../resources/resources.dart';
 
 class ItemArtistSpotlights extends StatelessWidget {
   final ArtistSpotlights artistSpotlights;
+  Function(Artist)? onArtistTap;
 
-  const ItemArtistSpotlights(this.artistSpotlights, {super.key});
+  ItemArtistSpotlights(
+      {required this.artistSpotlights, this.onArtistTap, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +56,10 @@ class ItemArtistSpotlights extends StatelessWidget {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: items.map((e) => _item(e)).toList(),
+              children: items
+                  .map((e) => InkWell(
+                      onTap: () => onArtistTap?.call(e), child: _item(e)))
+                  .toList(),
             ),
           ),
         ],

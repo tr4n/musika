@@ -29,7 +29,7 @@ class SongList extends StatelessWidget {
         _title(),
         const SizedBox(height: Sizes.size8),
         Column(
-            children: listSong
+            children: listSong.where((element) => element.isPrivate != true)
                 .map((e) => ItemSong(
                       song: e,
                       onPlay: onPlaySong,

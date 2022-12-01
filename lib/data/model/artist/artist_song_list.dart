@@ -1,7 +1,7 @@
 import '../../platform/network/response/base_response.dart';
 import '../song/song.dart';
 
-class ArtistSongList extends ToJsonAble {
+class ArtistSongList implements ToJsonAble {
   int? total;
   List<Song>? items;
   bool? hasMore;

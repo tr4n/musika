@@ -133,10 +133,10 @@ class AppApi {
     return SongStreamResponse.fromJson(response.data);
   }
 
-  Future<dynamic> getDetailArtist(String encodeId) async {
-    final url = ZingApi.apiDetailPlaylist(encodeId);
+  Future<DetailArtistResponse> getDetailArtist(String name) async {
+    final url = ZingApi.apiDetailArtist(name);
     final response = await _get(url);
-    return SongStreamResponse.fromJson(response.data);
+    return DetailArtistResponse.fromJson(response.data);
   }
 
   Future<ArtistSongListResponse> getArtistSongList(

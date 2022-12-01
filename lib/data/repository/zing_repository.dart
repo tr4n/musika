@@ -32,11 +32,11 @@ class ZingRepository {
     return _api.getSectionPlaylist(encodeId);
   }
 
-  Future<dynamic> getDetailArtist(String encodeId) async {
-    return _api.getDetailArtist(encodeId);
+  Future<DetailArtistResponse> getDetailArtist(String name) async {
+    return _api.getDetailArtist(name);
   }
 
-  Future<dynamic> getArtistSongList(
+  Future<ArtistSongListResponse> getArtistSongList(
       String artistId, int page, int count) async {
     return _api.getArtistSongList(artistId, page, count);
   }

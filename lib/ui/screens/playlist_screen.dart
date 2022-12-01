@@ -165,14 +165,16 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
               fontSize: Sizes.size18,
               color: Colors.black,
             ),
-            child: Text(_playlist.artistsNames ?? ""),
+            child: Text(
+              _playlist.artistsNames ?? "",
+              textAlign: TextAlign.center,
+            ),
           ),
           const SizedBox(height: Sizes.size12),
           DefaultTextStyle(
             style: const TextStyle(
               fontSize: Sizes.size14,
-              fontWeight: FontWeight.w200,
-              color: Colors.black,
+              color: Colors.grey,
             ),
             child: Text(
               _playlist.sortDescription ?? "",

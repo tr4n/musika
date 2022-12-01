@@ -11,23 +11,26 @@ class ItemSong extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(
-          horizontal: Sizes.size16, vertical: Sizes.size8),
-      child: Row(
-        children: [
-          _cover(),
-          const SizedBox(width: Sizes.size8),
-          Expanded(
-            child: IntrinsicHeight(
-              child: _nameAndArtists(),
+    return InkWell(
+      onTap: () => onPlay?.call(song),
+      child: Container(
+        margin: const EdgeInsets.symmetric(
+            horizontal: Sizes.size16, vertical: Sizes.size8),
+        child: Row(
+          children: [
+            _cover(),
+            const SizedBox(width: Sizes.size8),
+            Expanded(
+              child: IntrinsicHeight(
+                child: _nameAndArtists(),
+              ),
             ),
-          ),
-          const SizedBox(width: Sizes.size8),
-          _buttonPlay(),
-          const SizedBox(width: Sizes.size8),
-          _buttonMore(),
-        ],
+            const SizedBox(width: Sizes.size8),
+            _buttonPlay(),
+            const SizedBox(width: Sizes.size8),
+            _buttonMore(),
+          ],
+        ),
       ),
     );
   }

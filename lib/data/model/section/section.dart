@@ -1,6 +1,6 @@
 import '../artist/artist.dart';
 
-class Album {
+class Section {
   String? encodeId;
   String? title;
   String? thumbnail;
@@ -23,8 +23,9 @@ class Album {
   bool? isAlbum;
   String? textType;
   bool? isSingle;
+  String? releaseDateText;
 
-  Album(
+  Section(
       {this.encodeId,
       this.title,
       this.thumbnail,
@@ -46,9 +47,10 @@ class Album {
       this.userName,
       this.isAlbum,
       this.textType,
-      this.isSingle});
+      this.isSingle,
+      this.releaseDateText});
 
-  Album.fromJson(Map<String, dynamic> json) {
+  Section.fromJson(Map<String, dynamic> json) {
     encodeId = json['encodeId'];
     title = json['title'];
     thumbnail = json['thumbnail'];
@@ -59,7 +61,6 @@ class Album {
     sortDescription = json['sortDescription'];
     genreIds = json['genreIds'].cast<String>();
     pR = json['PR'];
-
     if (json['artists'] != null) {
       artists = <Artist>[];
       json['artists'].forEach((v) {
@@ -77,6 +78,7 @@ class Album {
     isAlbum = json['isAlbum'];
     textType = json['textType'];
     isSingle = json['isSingle'];
+    releaseDateText = json['releaseDateText'];
   }
 
   Map<String, dynamic> toJson() {
@@ -91,7 +93,9 @@ class Album {
     data['sortDescription'] = sortDescription;
     data['genreIds'] = genreIds;
     data['PR'] = pR;
-    data['artists'] = artists?.map((v) => v.toJson()).toList();
+    if (artists != null) {
+      data['artists'] = artists!.map((v) => v.toJson()).toList();
+    }
     data['artistsNames'] = artistsNames;
     data['playItemMode'] = playItemMode;
     data['subType'] = subType;
@@ -103,6 +107,7 @@ class Album {
     data['isAlbum'] = isAlbum;
     data['textType'] = textType;
     data['isSingle'] = isSingle;
+    data['releaseDateText'] = releaseDateText;
     return data;
   }
 }

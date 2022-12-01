@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:musium/ui/screens/artist_screen.dart';
 import '../../blocs/home_bloc.dart';
 import '../../data/model/models.dart';
 import '../../extension/context_ext.dart';
@@ -43,6 +44,15 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => PlaylistScreen(id)),
+    );
+  }
+
+  _onArtistSpotlightTap(Artist artist) {
+    final alias = artist.alias;
+    if (alias == null) return;
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ArtistScreen(alias)),
     );
   }
 
@@ -216,7 +226,12 @@ class _HomeScreenState extends State<HomeScreen> {
           return const SizedBox();
         }
         return Column(
-          children: artists.map((e) => ItemArtistSpotlights(e)).toList(),
+          children: artists
+              .map((e) => ItemArtistSpotlights(
+                    artistSpotlights: e,
+                    onArtistTap: _onArtistSpotlightTap,
+                  ))
+              .toList(),
         );
       },
     );
